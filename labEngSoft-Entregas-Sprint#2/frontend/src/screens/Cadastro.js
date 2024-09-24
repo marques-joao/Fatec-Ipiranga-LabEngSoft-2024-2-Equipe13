@@ -29,21 +29,28 @@ import {
     FormTitleContent,
 } from './../components/styles'
 
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, TouchableOpacity, Text, Pressable, ScrollView } from 'react-native';
 import { useState } from 'react';
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 import axios from 'axios';
+import { Modal } from '../components/Modal';
+import InfoTherms from '../components/InfoThermsPrivacy';
+import InfoThermsConditions from '../components/InfoThermsConditions';
+import InfoThermsPrivacy from '../components/InfoThermsPrivacy';
 
 // Colors
-const {darkGreen, grayThree, white} = Colors;
+const {darkGreen, grayThree, white, black} = Colors;
 
 const Cadastro = ({navigation}) => { 
 
     const [hidePassword, setHidePassword] = useState(true);
     const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
 
-    // const [isCheckedTherms, setIsCheckedTherms] = useState(false);
-    // const [isCheckedPrivacy, setIsCheckedPrivacy] = useState(false);
+    const [isCheckedTherms, setIsCheckedTherms] = useState(false);
+    const [isCheckedPrivacy, setIsCheckedPrivacy] = useState(false);
+
+    const [isModalVisibleConditions, setIsModalVisibleConditions] = useState(false);
+    const [isModalVisiblePrivacy, setIsModalVisiblePrivacy] = useState(false);
 
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
@@ -160,17 +167,21 @@ const Cadastro = ({navigation}) => {
                                     setHidePassword={setHideConfirmPassword}
                                 />
 
-                                {/* <Checkbox 
+                                <CheckboxConditions 
                                     label='Termos e Condições'
                                     isChecked={isCheckedTherms}
                                     setIsChecked={setIsCheckedTherms}
+                                    isModalVisibleConditions={isModalVisibleConditions}
+                                    setIsModalVisibleConditions={setIsModalVisibleConditions}
                                 />
 
-                                <Checkbox 
+                                <CheckboxPrivacy 
                                     label='Políticas de Privacidade'
                                     isChecked={isCheckedPrivacy}
                                     setIsChecked={setIsCheckedPrivacy}
-                                /> */}
+                                    isModalVisiblePrivacy={isModalVisiblePrivacy}
+                                    setIsModalVisiblePrivacy={setIsModalVisiblePrivacy}
+                                />
 
                                 <MsgBox type={messageType}>{message}</MsgBox>
 
@@ -219,111 +230,98 @@ const MyTextInput = ({label, icon, isPassword, hidePassword, setHidePassword, ..
     )
 };
 
-// const Checkbox = ({ label, isChecked, setIsChecked }) => {
-//     // const [isModalVisible, setIsModalVisible] = useState(false);
+const CheckboxConditions = ({ label, isChecked, setIsChecked, isModalVisibleConditions, setIsModalVisibleConditions}) => {
 
-//     return (
-//         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-//             {/* Caixa de seleção */}
-//             <TouchableOpacity onPress={() => setIsChecked(!isChecked)}>
-//                 <MaterialIcons 
-//                     name={isChecked ? 'check-box' : 'check-box-outline-blank'} 
-//                     size={24} 
-//                     color={darkGreen} 
-//                 />
-//             </TouchableOpacity>
+    return (
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+            {/* Caixa de seleção */}
+            <TouchableOpacity onPress={() => setIsChecked(!isChecked)}>
+                <MaterialIcons 
+                    name={isChecked ? 'check-box' : 'check-box-outline-blank'} 
+                    size={24} 
+                    color={darkGreen} 
+                />
+            </TouchableOpacity>
 
-//             {/* Label com link para abrir modal */}
-//             <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-//                 <Text style={{ marginLeft: 10, color: blue }}>{label}</Text>
-//             </TouchableOpacity>
+            {/* Label com link para abrir modal */}
+            <TouchableOpacity onPress={() => setIsModalVisibleConditions(!isModalVisibleConditions)}>
+                <Text style={{ marginLeft: 10, color: black }}>{label}</Text>
+            </TouchableOpacity>
 
-//             {/* Modal com os Termos
-//             <InfoTherms
-//                 isVisible={isModalVisible}
-//                 onClose={() => setIsModalVisible(false)}
-//             /> */}
-//         </View>
-//     );
-// };
+            {isModalVisibleConditions && (
+                <Modal
+                    isOpen={isModalVisibleConditions}
+                >
+                    <InfoThermsConditions />
+                    <Pressable
+                                onPress={() => setIsModalVisibleConditions(false)}
+                                style={{
+                                    backgroundColor: 'red',
+                                    padding: 5,
+                                    borderRadius: 5,
+                                    marginTop: 10,
+                                    width: '40%',
+                                    height: '5%',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                }}
+                            >
+                                <Text style={{ color: white, fontWeight: 'bold' }}>Fechar</Text>
+                    </Pressable>
 
+                </Modal>
+            )}  
 
-// const InfoTherms = ({ isVisible, onClose }) => {
-// return (
-//     <Modal
-//     visible={isVisible}
-//     transparent={true}
-//     animationType="slide"
-//     onRequestClose={onClose}
-//     >
-//     <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center' }}>
-//         <View style={{ backgroundColor: white, padding: 20, borderRadius: 10, margin: 20 }}>
-//         <ScrollView style={{ maxHeight: 400 }}>
-//             <Text style={{ fontWeight: 'bold', fontSize: 18 }}>TERMOS E CONDIÇÕES</Text>{'\n\n'}
+        </View>
+    );
+};
 
-//             <Text style={{ fontWeight: 'bold' }}>1. Coleta de Dados</Text>{'\n'}
-//             <Text>
-//             A VitalCare pode coletar as seguintes informações pessoais:
-//             {'\n'}- Dados fornecidos diretamente pelo usuário ao preencher formulários (nome, e-mail, telefone);
-//             {'\n'}- Dados coletados automaticamente através de cookies e tecnologias similares (endereço IP, dados de navegação);
-//             {'\n'}- Informações financeiras para efetuar pagamentos ou assinaturas.
-//             {'\n\n'}
-//             </Text>
-            
-//             <Text style={{ fontWeight: 'bold' }}>2. Utilização dos Dados</Text>{'\n'}
-//             <Text>
-//             As informações coletadas são utilizadas para:
-//             {'\n'}- Prestar e melhorar os serviços da VitalCare;
-//             {'\n'}- Personalizar a experiência do usuário;
-//             {'\n'}- Processar transações e enviar comunicados importantes;
-//             {'\n'}- Realizar estudos e análises internas com o objetivo de melhorar nossos serviços.
-//             {'\n\n'}
-//             </Text>
-            
-//             <Text style={{ fontWeight: 'bold' }}>3. Compartilhamento de Dados</Text>{'\n'}
-//             <Text>
-//             VitalCare se compromete a não compartilhar suas informações pessoais com terceiros, exceto nas seguintes circunstâncias:
-//             {'\n'}- Quando houver consentimento do usuário;
-//             {'\n'}- Para cumprir obrigações legais;
-//             {'\n'}- Para parceiros de confiança, com a finalidade de melhorar o serviço, desde que esses parceiros sigam normas de privacidade e segurança.
-//             {'\n\n'}
-//             </Text>
+const CheckboxPrivacy = ({ label, isChecked, setIsChecked, isModalVisiblePrivacy, setIsModalVisiblePrivacy}) => {
 
-//             <Text style={{ fontWeight: 'bold' }}>4. Armazenamento e Segurança dos Dados</Text>{'\n'}
-//             <Text>
-//             Os dados coletados pela VitalCare são armazenados em servidores seguros e protegidos por medidas técnicas e administrativas apropriadas para garantir sua integridade e confidencialidade. No entanto, a VitalCare não pode garantir que não haverá acessos não autorizados a esses dados.
-//             {'\n\n'}
-//             </Text>
+    return (
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+            {/* Caixa de seleção */}
+            <TouchableOpacity onPress={() => setIsChecked(!isChecked)}>
+                <MaterialIcons 
+                    name={isChecked ? 'check-box' : 'check-box-outline-blank'} 
+                    size={24} 
+                    color={darkGreen} 
+                />
+            </TouchableOpacity>
 
-//             <Text style={{ fontWeight: 'bold' }}>5. Direitos dos Usuários</Text>{'\n'}
-//             <Text>
-//             Você tem o direito de:
-//             {'\n'}- Acessar, corrigir ou excluir suas informações pessoais;
-//             {'\n'}- Solicitar a portabilidade dos seus dados;
-//             {'\n'}- Retirar o consentimento para o uso dos seus dados a qualquer momento, sendo avisado sobre as consequências disso.
-//             {'\n\n'}
-//             </Text>
+            {/* Label com link para abrir modal */}
+            <TouchableOpacity onPress={() => setIsModalVisiblePrivacy(!isModalVisiblePrivacy)}>
+                <Text style={{ marginLeft: 10, color: black }}>{label}</Text>
+            </TouchableOpacity>
 
-//             <Text style={{ fontWeight: 'bold' }}>6. Alterações na Política de Privacidade</Text>{'\n'}
-//             <Text>
-//             A VitalCare pode atualizar esta política periodicamente, e qualquer alteração será comunicada por meio do nosso site ou aplicativo. Recomendamos que você revise esta página regularmente para se manter informado.
-//             {'\n\n'}
-//             </Text>
+            {isModalVisiblePrivacy && (
+                <Modal
+                    isOpen={isModalVisiblePrivacy}
+                >
+                    <InfoThermsPrivacy />
+                    <Pressable
+                                onPress={() => setIsModalVisiblePrivacy(false)}
+                                style={{
+                                    backgroundColor: 'red',
+                                    padding: 5,
+                                    borderRadius: 5,
+                                    marginTop: 10,
+                                    width: '40%',
+                                    height: '5%',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                }}
+                            >
+                                <Text style={{ color: white, fontWeight: 'bold' }}>Fechar</Text>
+                    </Pressable>
 
-//             <Text style={{ fontWeight: 'bold' }}>7. Contato</Text>{'\n'}
-//             <Text>
-//             Em caso de dúvidas sobre esta Política de Privacidade ou sobre o tratamento de seus dados pessoais, entre em contato conosco pelo e-mail: vitalcareapp@gmail.com
-//             </Text>
+                </Modal>
+            )}  
 
-//         </ScrollView>
-
-//         <TouchableOpacity onPress={onClose}>
-//             <Text style={{ color: darkGreen, marginTop: 20, textAlign: 'center' }}>Fechar</Text>
-//         </TouchableOpacity>
-//         </View>
-//     </View>
-//     </Modal>
-// );
-// };
+        </View>
+    );
+};
 
 export default Cadastro;

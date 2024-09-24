@@ -214,25 +214,39 @@ export const ForgotPasswordContent = styled.Text`
     font-size: 14px;
 `;
 
-// export const ThermsAndPolitics = styled.View`
-//     width: 100%;
-//     height: 5%;
-//     flex-direction: row;
-//     align-items: center;
-//     margin-top: 5px;
-// `;
+export const ModalContentStyledContainer = styled.View`
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+`;
 
-// export const CheckboxContainer = styled.TouchableOpacity`
-//     align-items: left;
-// `;
+export const InfoThermsContainer = styled.View`
+    background-color: ${white};
+    width: 90%;
+    height: 70%;
+    border-radius: 5px;
+    shadow-color: ${black};
+    border-color: ${grayThree};
+    shadow-opacity: 0.25;
+    shadow-radius: 3.84px;
+    elevation: 5;
+    padding: 10px;
+`;
 
-// export const CheckBoxLink = styled.TouchableOpacity`
-//     justify-content: center;
-//     align-items: center;
-// `;
+export const InfoThermsContent = styled.ScrollView`
+    flex-grow: 1;
+`;
 
-// export const CheckboxLabel = styled.Text`
-//   font-size: 14px;
-//   margin-left: 5px;
-//   color: ${black};
-// `;
+export const InfoThermsTitle = styled.Text`
+    font-weight: bold;
+    font-size: 18px;
+`;
+
+export const InfoThermsSubTitle = styled.Text`
+    font-weight: bold;
+    font-size: 16px;
+`;
+
+export const InfoThermsText = styled.Text`
+    font-size: 15px;
+`;
