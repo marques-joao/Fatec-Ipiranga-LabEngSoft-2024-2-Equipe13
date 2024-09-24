@@ -104,7 +104,7 @@ export const PageSubTitle = styled.Text`
 `;
 
 export const StyledFormArea = styled.View`
-    width: 90%;
+    width: 95%;
 `;
 
 export const StyledTextInput = styled.TextInput`

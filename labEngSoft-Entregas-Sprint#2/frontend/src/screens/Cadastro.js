@@ -29,17 +29,16 @@ import {
     FormTitleContent,
 } from './../components/styles'
 
-import { View, ActivityIndicator, TouchableOpacity, Text, Pressable, ScrollView } from 'react-native';
+import { View, ActivityIndicator, TouchableOpacity, Text, Pressable } from 'react-native';
 import { useState } from 'react';
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 import axios from 'axios';
 import { Modal } from '../components/Modal';
-import InfoTherms from '../components/InfoThermsPrivacy';
 import InfoThermsConditions from '../components/InfoThermsConditions';
 import InfoThermsPrivacy from '../components/InfoThermsPrivacy';
 
 // Colors
-const {darkGreen, grayThree, white, black} = Colors;
+const {darkGreen, grayThree, white, blue} = Colors;
 
 const Cadastro = ({navigation}) => { 
 
@@ -168,7 +167,7 @@ const Cadastro = ({navigation}) => {
                                 />
 
                                 <CheckboxConditions 
-                                    label='Termos e Condições'
+                                    label='Concordo com Termos e Condições'
                                     isChecked={isCheckedTherms}
                                     setIsChecked={setIsCheckedTherms}
                                     isModalVisibleConditions={isModalVisibleConditions}
@@ -176,7 +175,7 @@ const Cadastro = ({navigation}) => {
                                 />
 
                                 <CheckboxPrivacy 
-                                    label='Políticas de Privacidade'
+                                    label='Concordo com Políticas de Privacidade'
                                     isChecked={isCheckedPrivacy}
                                     setIsChecked={setIsCheckedPrivacy}
                                     isModalVisiblePrivacy={isModalVisiblePrivacy}
@@ -245,7 +244,7 @@ const CheckboxConditions = ({ label, isChecked, setIsChecked, isModalVisibleCond
 
             {/* Label com link para abrir modal */}
             <TouchableOpacity onPress={() => setIsModalVisibleConditions(!isModalVisibleConditions)}>
-                <Text style={{ marginLeft: 10, color: black }}>{label}</Text>
+                <Text style={{ marginLeft: 10, color: blue }}>{label}</Text>
             </TouchableOpacity>
 
             {isModalVisibleConditions && (
@@ -292,7 +291,7 @@ const CheckboxPrivacy = ({ label, isChecked, setIsChecked, isModalVisiblePrivacy
 
             {/* Label com link para abrir modal */}
             <TouchableOpacity onPress={() => setIsModalVisiblePrivacy(!isModalVisiblePrivacy)}>
-                <Text style={{ marginLeft: 10, color: black }}>{label}</Text>
+                <Text style={{ marginLeft: 10, color: blue }}>{label}</Text>
             </TouchableOpacity>
 
             {isModalVisiblePrivacy && (
