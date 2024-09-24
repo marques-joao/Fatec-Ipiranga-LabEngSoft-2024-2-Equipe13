@@ -64,8 +64,8 @@ const Login = ({navigation}) => {
             if (status != 'SUCCESS') {
                 handleMessage(message, status);
             } else {
-                navigation.navigate('Welcome', {... data[0]});
-                console.log(data[0]);
+                navigation.navigate('Welcome', {... data});
+                console.log(data);
             }
 
             setSubmitting(false);
@@ -73,8 +73,9 @@ const Login = ({navigation}) => {
         })
         .catch((error) => {
             console.log(error.response.data);
+            console.log(credentials);
             setSubmitting(false);
-            handleMessage('Ocorreu um erro. Verifique sua conexão com a internet e tente novamente.');
+            handleMessage('Senha inválida');
         })
     }
 

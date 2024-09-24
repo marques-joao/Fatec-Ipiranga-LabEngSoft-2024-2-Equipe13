@@ -5,9 +5,7 @@ import com.joaomarques.teste_vitalcare.domain.repository.UsuarioRepository;
 import com.joaomarques.teste_vitalcare.dto.request.LoginRequestDTO;
 import com.joaomarques.teste_vitalcare.dto.request.RegisterRequestDTO;
 import com.joaomarques.teste_vitalcare.dto.response.LoginResponseDTO;
-import com.joaomarques.teste_vitalcare.dto.UsuarioDTO;
 import com.joaomarques.teste_vitalcare.dto.response.RegisterResponseDTO;
-import com.joaomarques.teste_vitalcare.mapper.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +17,6 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-//    public UsuarioDTO adicionarUsuario(UsuarioDTO usuarioDTO) {
-//        UsuarioEntity usuarioEntity = UsuarioMapper.mapToUsuarioEntity(usuarioDTO);
-//
-//        UsuarioEntity usuarioSalvo = usuarioRepository.save(usuarioEntity);
-//
-//        return UsuarioMapper.mapToUsuarioDTO(usuarioSalvo);
-//    }
 
     public RegisterResponseDTO adicionarUsuario(RegisterRequestDTO registerRequestDTO) {
         Optional<UsuarioEntity> usuarioEntity = this.usuarioRepository.findByEmail(
