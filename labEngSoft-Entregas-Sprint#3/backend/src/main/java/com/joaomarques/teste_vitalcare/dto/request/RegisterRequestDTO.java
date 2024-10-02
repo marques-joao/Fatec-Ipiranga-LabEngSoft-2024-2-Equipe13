@@ -14,5 +14,6 @@ public class RegisterRequestDTO {
     private String nomeCompleto;
     private String email;
     private String senha;
+    private String contatoEmergencia;
 
 }

@@ -14,6 +14,6 @@ public class UsuarioDTO {
     private Long idUsuario;
     private String nome;
     private String email;
-    private String senha;
+    private String contatoEmergencia;
 
 }

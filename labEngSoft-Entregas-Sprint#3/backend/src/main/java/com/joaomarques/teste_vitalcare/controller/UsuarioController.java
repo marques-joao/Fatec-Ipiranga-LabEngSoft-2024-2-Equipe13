@@ -3,15 +3,13 @@ package com.joaomarques.teste_vitalcare.controller;
 import com.joaomarques.teste_vitalcare.domain.service.UsuarioService;
 import com.joaomarques.teste_vitalcare.dto.request.LoginRequestDTO;
 import com.joaomarques.teste_vitalcare.dto.request.RegisterRequestDTO;
+import com.joaomarques.teste_vitalcare.dto.response.ChamadaSOSResponseDTO;
 import com.joaomarques.teste_vitalcare.dto.response.LoginResponseDTO;
 import com.joaomarques.teste_vitalcare.dto.response.RegisterResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -44,6 +42,13 @@ public class UsuarioController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @PostMapping("/{idUsuario}/sos")
+    public ChamadaSOSResponseDTO acionarSOS(@PathVariable Long idUsuario) {
+
+        return usuarioService.acionarSOS(idUsuario);
+
     }
 
 

@@ -10,7 +10,7 @@ public class UsuarioMapper {
                 usuarioEntity.getIdUsuario(),
                 usuarioEntity.getNome(),
                 usuarioEntity.getEmail(),
-                usuarioEntity.getSenha()
+                usuarioEntity.getContatoEmergencia()
         );
     }
 
@@ -19,7 +19,7 @@ public class UsuarioMapper {
                 usuarioDTO.getIdUsuario(),
                 usuarioDTO.getNome(),
                 usuarioDTO.getEmail(),
-                usuarioDTO.getSenha()
+                usuarioDTO.getContatoEmergencia()
         );
     }
 

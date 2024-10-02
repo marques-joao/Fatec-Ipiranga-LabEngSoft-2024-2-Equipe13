@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,4 +29,15 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private String senha;
 
+    private String contatoEmergencia;
+
+    @OneToMany(mappedBy = "usuarioEntity")
+    private List<ChamadaSOSEntity> chamadasSOS;
+
+    public UsuarioEntity(Long idUsuario, String nome, String email, String contatoEmergencia) {
+        this.idUsuario = idUsuario;
+        this.nome = nome;
+        this.email = email;
+        this.contatoEmergencia = contatoEmergencia;
+    }
 }
