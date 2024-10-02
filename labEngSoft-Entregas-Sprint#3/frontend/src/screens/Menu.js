@@ -16,9 +16,11 @@ const MenuScreen = () => {
   const navigation = useNavigation(); // Inicializando a navegação
 
   const renderMenuButton = (title, iconSource, onPress) => (
-    <TouchableOpacity onPress={onPress} style={{ alignItems: 'center', margin: 10 }}>
-      <Image source={iconSource} style={{ width: 50, height: 50 }} />
-      <Text style={{ marginTop: 5 }}>{title}</Text>
+    <TouchableOpacity onPress={onPress} style={{ alignItems: 'center', margin: 20 }}>
+      {/* Aumentando a imagem para 80x80 */}
+      <Image source={iconSource} style={{ width: 80, height: 80 }} />
+      {/* Aumentando o tamanho da fonte para 18 */}
+      <Text style={{ marginTop: 10, fontSize: 18, textAlign: 'center' }}>{title}</Text>
     </TouchableOpacity>
   );
 
@@ -34,19 +36,28 @@ const MenuScreen = () => {
 
         {/* Ícones do Menu */}
         <InnerContainer>
-          <ExtraView>
-            {renderMenuButton('Agenda', require('../assets/Agenda.png'), () => {})}
-            {renderMenuButton('Relatórios', require('../assets/Relatorio.png'), () => {})}
-          </ExtraView>
-          <ExtraView>
-            {renderMenuButton('Dados de Saúde', require('../assets/DadosSaude.png'), () => {})}
-            {renderMenuButton('Maps', require('../assets/Maps.png'), () => {})}
-          </ExtraView>
-          <ExtraView>
-            {renderMenuButton('Configurações', require('../assets/Configuração.png'), () => {})}
-            {/* Navegar para a tela PopUpSOS.js quando o ícone SOS for clicado */}
-            {renderMenuButton('SOS', require('../assets/SOS.png'), () => navigation.navigate('PopUpSOS'))}
-          </ExtraView>
+          {/* Usando flexDirection 'row' para formar duas colunas */}
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {/* Centralizando e alinhando os itens em duas colunas */}
+            <View style={{ width: '50%', alignItems: 'center' }}>
+              {renderMenuButton('Agenda', require('../assets/Agenda.png'), () => {})}
+            </View>
+            <View style={{ width: '50%', alignItems: 'center' }}>
+              {renderMenuButton('Relatórios', require('../assets/Relatorio.png'), () => {})}
+            </View>
+            <View style={{ width: '50%', alignItems: 'center' }}>
+              {renderMenuButton('Dados de Saúde', require('../assets/DadosSaude.png'), () => {})}
+            </View>
+            <View style={{ width: '50%', alignItems: 'center' }}>
+              {renderMenuButton('Maps', require('../assets/Maps.png'), () => {})}
+            </View>
+            <View style={{ width: '50%', alignItems: 'center' }}>
+              {renderMenuButton('Configurações', require('../assets/Configuração.png'), () => {})}
+            </View>
+            <View style={{ width: '50%', alignItems: 'center' }}>
+              {renderMenuButton('SOS', require('../assets/SOS.png'), () => navigation.navigate('PopUpSOS'))}
+            </View>
+          </View>
         </InnerContainer>
       </InnerContainer>
     </StyledContainer>
