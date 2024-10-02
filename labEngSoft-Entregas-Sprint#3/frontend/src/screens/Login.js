@@ -64,7 +64,7 @@ const Login = ({navigation}) => {
             if (status != 'SUCCESS') {
                 handleMessage(message, status);
             } else {
-                navigation.navigate('Welcome', {... data});
+                navigation.navigate('Menu', {... data});
                 console.log(data);
             }
 
