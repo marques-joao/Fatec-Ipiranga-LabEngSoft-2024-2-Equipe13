@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Image, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Importar navegação
 import {
   StyledContainer,
   InnerContainer,
@@ -12,6 +13,7 @@ import {
 const MenuScreen = () => {
   const [userName, setUserName] = useState('João Vitor');
   const [userRole, setUserRole] = useState('Cuidador');
+  const navigation = useNavigation(); // Inicializando a navegação
 
   const renderMenuButton = (title, iconSource, onPress) => (
     <TouchableOpacity onPress={onPress} style={{ alignItems: 'center', margin: 10 }}>
@@ -42,7 +44,8 @@ const MenuScreen = () => {
           </ExtraView>
           <ExtraView>
             {renderMenuButton('Configurações', require('../assets/Configuração.png'), () => {})}
-            {renderMenuButton('SOS', require('../assets/SOS.png'), () => {})}
+            {/* Navegar para a tela PopUpSOS.js quando o ícone SOS for clicado */}
+            {renderMenuButton('SOS', require('../assets/SOS.png'), () => navigation.navigate('PopUpSOS'))}
           </ExtraView>
         </InnerContainer>
       </InnerContainer>
