@@ -5,7 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Login from '../screens/Login';
 import Cadastro from '../screens/Cadastro';
-import Welcome from '../screens/Welcome';
+//import Welcome from '../screens/Welcome';
+import Menu from '../screens/Menu';
 
 import { Colors } from '../components/styles';
 
@@ -26,11 +27,12 @@ const RootStack = () => {
                         padding: 20
                     }
                 }}
-                initialRouteName='Login'
+                initialRouteName='Menu'
             >
                 <Stack.Screen name='Login' component={Login} />
                 <Stack.Screen name='Cadastro' component={Cadastro} />
-                <Stack.Screen options={{headerTintColor: Colors.white}} name='Welcome' component={Welcome} />
+                <Stack.Screen name='Menu' component={Menu} />
+                {/* <Stack.Screen options={{headerTintColor: Colors.white}} name='Welcome' component={Welcome} /> */}
             </Stack.Navigator>
         </NavigationContainer>
     );
