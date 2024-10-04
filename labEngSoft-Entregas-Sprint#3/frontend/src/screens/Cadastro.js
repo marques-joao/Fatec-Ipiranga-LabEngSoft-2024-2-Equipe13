@@ -27,7 +27,7 @@ import {
     FormContainer,
     FormTitle,
     FormTitleContent,
-} from './../components/styles'
+} from './../components/styles';
 
 import { View, ActivityIndicator, TouchableOpacity, Text, Pressable } from 'react-native';
 import { useState } from 'react';
@@ -38,9 +38,9 @@ import InfoThermsConditions from '../components/InfoThermsConditions';
 import InfoThermsPrivacy from '../components/InfoThermsPrivacy';
 
 // Colors
-const {darkGreen, grayThree, white, blue} = Colors;
+const { darkGreen, grayThree, white, blue } = Colors;
 
-const Cadastro = ({navigation}) => { 
+const Cadastro = ({ navigation }) => {
 
     const [hidePassword, setHidePassword] = useState(true);
     const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
@@ -60,35 +60,42 @@ const Cadastro = ({navigation}) => {
         const url = 'http://192.168.15.117:8080/usuarios/cadastro';
 
         axios
-        .post(url, credentials)
-        .then((response) => {
-            const result = response.data;
-            const {status, message, data} = result;
+            .post(url, credentials)
+            .then((response) => {
+                const result = response.data;
+                const { status, message, data } = result;
 
-            if (status != 'SUCCESS') {
-                handleMessage(message, status);
-            } else {
-                navigation.navigate('Menu', {... data});
-            }
+                if (status != 'SUCCESS') {
+                    handleMessage(message, status);
+                } else {
+                    navigation.navigate('Menu', { ...data });
+                }
 
-            setSubmitting(false);
-            
-        })
-        .catch((error) => {
-            console.log(error.response.data);
-            setSubmitting(false);
-            handleMessage('Ocorreu um erro. Verifique sua conexão com a internet e tente novamente.');
-        })
-    }
+                setSubmitting(false);
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                setSubmitting(false);
+                handleMessage('Ocorreu um erro. Verifique sua conexão com a internet e tente novamente.');
+            });
+    };
 
     const handleMessage = (message, type = 'FAILED') => {
         setMessage(message);
         setMessageType(type);
-    }
+    };
 
+    // Função para formatar o celular
+    const formatPhoneNumber = (value) => {
+        const cleaned = ('' + value).replace(/\D/g, ''); // Remove tudo que não for número
+        const match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
+        if (match) {
+            return `(${match[1]}) ${match[2]}-${match[3]}`;
+        }
+        return value;
+    };
 
     return (
-
         <KeyboardAvoidingWrapper>
             <StyledContainer>
                 <StatusBar style='auto' />
@@ -102,9 +109,9 @@ const Cadastro = ({navigation}) => {
                         </FormTitle>
 
                         <Formik
-                            initialValues={{nomeCompleto: '', email: '', senha: '', confirmaSenha: ''}}
-                            onSubmit={(values, {setSubmitting}) => {
-                                if (values.email == '' || values.senha == '' || values.nomeCompleto == '' || values.confirmaSenha == '') {
+                            initialValues={{ nomeCompleto: '', email: '', senha: '', confirmaSenha: '', contatoEmergencia: '', celularEmergencia: '' }}
+                            onSubmit={(values, { setSubmitting }) => {
+                                if (values.email == '' || values.senha == '' || values.nomeCompleto == '' || values.confirmaSenha == '' || values.contatoEmergencia == '' || values.celularEmergencia == '') {
                                     handleMessage('Por favor, preencha todos os campos!');
                                     setSubmitting(false);
                                 } else if (values.senha !== values.confirmaSenha) {
@@ -115,95 +122,117 @@ const Cadastro = ({navigation}) => {
                                 }
                             }}
                         >
-                            {({handleChange, handleBlur, handleSubmit, values, isSubmitting}) => (
-                            <StyledFormArea>
-                                <MyTextInput 
-                                    label='Nome completo'
-                                    icon='person'
-                                    placeholder='Exemplo da Silva'
-                                    placeholderTextColor={grayThree}
-                                    onChangeText={handleChange('nomeCompleto')}
-                                    onBlur={handleBlur('nomeCompleto')}
-                                    value={values.nomeCompleto}
-                                />
+                            {({ handleChange, handleBlur, handleSubmit, values, setFieldValue, isSubmitting }) => (
+                                <StyledFormArea>
+                                    <MyTextInput
+                                        label='Nome completo'
+                                        icon='person'
+                                        placeholder='Exemplo da Silva'
+                                        placeholderTextColor={grayThree}
+                                        onChangeText={handleChange('nomeCompleto')}
+                                        onBlur={handleBlur('nomeCompleto')}
+                                        value={values.nomeCompleto}
+                                    />
 
-                                <MyTextInput 
-                                    label='Endereço de e-mail'
-                                    icon='email'
-                                    placeholder='exemplo@email.com'
-                                    placeholderTextColor={grayThree}
-                                    onChangeText={handleChange('email')}
-                                    onBlur={handleBlur('email')}
-                                    value={values.email}
-                                    keyboardType='email-address'
-                                />
+                                    <MyTextInput
+                                        label='Endereço de e-mail'
+                                        icon='email'
+                                        placeholder='exemplo@email.com'
+                                        placeholderTextColor={grayThree}
+                                        onChangeText={handleChange('email')}
+                                        onBlur={handleBlur('email')}
+                                        value={values.email}
+                                        keyboardType='email-address'
+                                    />
 
-                                <MyTextInput 
-                                    label='Senha'
-                                    icon='lock'
-                                    placeholder='• • • • • • • •'
-                                    placeholderTextColor={grayThree}
-                                    onChangeText={handleChange('senha')}
-                                    onBlur={handleBlur('senha')}
-                                    value={values.senha}
-                                    secureTextEntry={hidePassword}
-                                    isPassword={true}
-                                    hidePassword={hidePassword}
-                                    setHidePassword={setHidePassword}
-                                />
+                                    {/* Nome do Contato de Emergência */}
+                                    <MyTextInput
+                                        label='Nome do Contato de Emergência'
+                                        icon='person'
+                                        placeholder='Nome do contato'
+                                        placeholderTextColor={grayThree}
+                                        onChangeText={handleChange('contatoEmergencia')}
+                                        onBlur={handleBlur('contatoEmergencia')}
+                                        value={values.contatoEmergencia}
+                                    />
 
-                                <MyTextInput 
-                                    label='Confirmar senha'
-                                    icon='lock'
-                                    placeholder='• • • • • • • •'
-                                    placeholderTextColor={grayThree}
-                                    onChangeText={handleChange('confirmaSenha')}
-                                    onBlur={handleBlur('confirmaSenha')}
-                                    value={values.confirmaSenha}
-                                    secureTextEntry={hideConfirmPassword}
-                                    isPassword={true}
-                                    hidePassword={hideConfirmPassword}
-                                    setHidePassword={setHideConfirmPassword}
-                                />
+                                    {/* Celular do Contato de Emergência */}
+                                    <MyTextInput
+                                        label='Celular do Contato de Emergência'
+                                        icon='phone'
+                                        placeholder='(11) 12345-6789'
+                                        placeholderTextColor={grayThree}
+                                        onChangeText={(value) => setFieldValue('celularEmergencia', formatPhoneNumber(value))}
+                                        onBlur={handleBlur('celularEmergencia')}
+                                        value={values.celularEmergencia}
+                                        keyboardType='phone-pad'
+                                    />
 
-                                <CheckboxConditions 
-                                    label='Concordo com Termos e Condições'
-                                    isChecked={isCheckedTherms}
-                                    setIsChecked={setIsCheckedTherms}
-                                    isModalVisibleConditions={isModalVisibleConditions}
-                                    setIsModalVisibleConditions={setIsModalVisibleConditions}
-                                />
+                                    <MyTextInput
+                                        label='Senha'
+                                        icon='lock'
+                                        placeholder='• • • • • • • •'
+                                        placeholderTextColor={grayThree}
+                                        onChangeText={handleChange('senha')}
+                                        onBlur={handleBlur('senha')}
+                                        value={values.senha}
+                                        secureTextEntry={hidePassword}
+                                        isPassword={true}
+                                        hidePassword={hidePassword}
+                                        setHidePassword={setHidePassword}
+                                    />
 
-                                <CheckboxPrivacy 
-                                    label='Concordo com Políticas de Privacidade'
-                                    isChecked={isCheckedPrivacy}
-                                    setIsChecked={setIsCheckedPrivacy}
-                                    isModalVisiblePrivacy={isModalVisiblePrivacy}
-                                    setIsModalVisiblePrivacy={setIsModalVisiblePrivacy}
-                                />
+                                    <MyTextInput
+                                        label='Confirmar senha'
+                                        icon='lock'
+                                        placeholder='• • • • • • • •'
+                                        placeholderTextColor={grayThree}
+                                        onChangeText={handleChange('confirmaSenha')}
+                                        onBlur={handleBlur('confirmaSenha')}
+                                        value={values.confirmaSenha}
+                                        secureTextEntry={hideConfirmPassword}
+                                        isPassword={true}
+                                        hidePassword={hideConfirmPassword}
+                                        setHideConfirmPassword={setHideConfirmPassword}
+                                    />
 
-                                <MsgBox type={messageType}>{message}</MsgBox>
+                                    <CheckboxConditions
+                                        label='Concordo com Termos e Condições'
+                                        isChecked={isCheckedTherms}
+                                        setIsChecked={setIsCheckedTherms}
+                                        isModalVisibleConditions={isModalVisibleConditions}
+                                        setIsModalVisibleConditions={setIsModalVisibleConditions}
+                                    />
 
-                                {!isSubmitting && <StyledButton onPress={handleSubmit}>
-                                    <ButtonText>Cadastrar</ButtonText>
-                                </StyledButton>}
+                                    <CheckboxPrivacy
+                                        label='Concordo com Políticas de Privacidade'
+                                        isChecked={isCheckedPrivacy}
+                                        setIsChecked={setIsCheckedPrivacy}
+                                        isModalVisiblePrivacy={isModalVisiblePrivacy}
+                                        setIsModalVisiblePrivacy={setIsModalVisiblePrivacy}
+                                    />
 
-                                {isSubmitting && <StyledButton disabled={true} >
-                                    <ActivityIndicator size='large' color={white} />
-                                </StyledButton>}
+                                    <MsgBox type={messageType}>{message}</MsgBox>
 
-                                <Line />
+                                    {!isSubmitting && <StyledButton onPress={handleSubmit}>
+                                        <ButtonText>Cadastrar</ButtonText>
+                                    </StyledButton>}
 
-                                <ExtraView>
-                                    <ExtraText>Já possui uma conta?</ExtraText>
-                                    <TextLink onPress={() => navigation.navigate('Login')} >
-                                        <TextLinkContent>Login</TextLinkContent>
-                                    </TextLink>
-                                </ExtraView>
+                                    {isSubmitting && <StyledButton disabled={true}>
+                                        <ActivityIndicator size='large' color={white} />
+                                    </StyledButton>}
 
-                            </StyledFormArea>
-                        )}
+                                    <Line />
 
+                                    <ExtraView>
+                                        <ExtraText>Já possui uma conta?</ExtraText>
+                                        <TextLink onPress={() => navigation.navigate('Login')}>
+                                            <TextLinkContent>Login</TextLinkContent>
+                                        </TextLink>
+                                    </ExtraView>
+
+                                </StyledFormArea>
+                            )}
                         </Formik>
                     </FormContainer>
                 </InnerContainer>
@@ -212,7 +241,7 @@ const Cadastro = ({navigation}) => {
     );
 };
 
-const MyTextInput = ({label, icon, isPassword, hidePassword, setHidePassword, ...props}) => {
+const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
     return (
         <View>
             <LeftIcon>
@@ -221,28 +250,25 @@ const MyTextInput = ({label, icon, isPassword, hidePassword, setHidePassword, ..
             <StyledInputLabel>{label}</StyledInputLabel>
             <StyledTextInput {...props} />
             {isPassword && (
-                <RightIcon onPress={() => setHidePassword(!hidePassword)} >
+                <RightIcon onPress={() => setHidePassword(!hidePassword)}>
                     <MaterialIcons name={hidePassword ? 'visibility' : 'visibility-off'} size={30} color={grayThree} />
                 </RightIcon>
-            )}            
+            )}
         </View>
-    )
+    );
 };
 
-const CheckboxConditions = ({ label, isChecked, setIsChecked, isModalVisibleConditions, setIsModalVisibleConditions}) => {
-
+const CheckboxConditions = ({ label, isChecked, setIsChecked, isModalVisibleConditions, setIsModalVisibleConditions }) => {
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-            {/* Caixa de seleção */}
             <TouchableOpacity onPress={() => setIsChecked(!isChecked)}>
-                <MaterialIcons 
-                    name={isChecked ? 'check-box' : 'check-box-outline-blank'} 
-                    size={24} 
-                    color={darkGreen} 
+                <MaterialIcons
+                    name={isChecked ? 'check-box' : 'check-box-outline-blank'}
+                    size={24}
+                    color={darkGreen}
                 />
             </TouchableOpacity>
 
-            {/* Label com link para abrir modal */}
             <TouchableOpacity onPress={() => setIsModalVisibleConditions(!isModalVisibleConditions)}>
                 <Text style={{ marginLeft: 10, color: blue }}>{label}</Text>
             </TouchableOpacity>
@@ -253,43 +279,39 @@ const CheckboxConditions = ({ label, isChecked, setIsChecked, isModalVisibleCond
                 >
                     <InfoThermsConditions />
                     <Pressable
-                                onPress={() => setIsModalVisibleConditions(false)}
-                                style={{
-                                    backgroundColor: 'red',
-                                    padding: 5,
-                                    borderRadius: 5,
-                                    marginTop: 10,
-                                    width: '40%',
-                                    height: '5%',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                }}
-                            >
-                                <Text style={{ color: white, fontWeight: 'bold' }}>Fechar</Text>
+                        onPress={() => setIsModalVisibleConditions(false)}
+                        style={{
+                            backgroundColor: 'red',
+                            padding: 5,
+                            borderRadius: 5,
+                            marginTop: 10,
+                            width: '40%',
+                            height: '5%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            display: 'flex',
+                        }}
+                    >
+                        <Text style={{ color: white, fontWeight: 'bold' }}>Fechar</Text>
                     </Pressable>
 
                 </Modal>
-            )}  
-
+            )}
         </View>
     );
 };
 
-const CheckboxPrivacy = ({ label, isChecked, setIsChecked, isModalVisiblePrivacy, setIsModalVisiblePrivacy}) => {
-
+const CheckboxPrivacy = ({ label, isChecked, setIsChecked, isModalVisiblePrivacy, setIsModalVisiblePrivacy }) => {
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-            {/* Caixa de seleção */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
             <TouchableOpacity onPress={() => setIsChecked(!isChecked)}>
-                <MaterialIcons 
-                    name={isChecked ? 'check-box' : 'check-box-outline-blank'} 
-                    size={24} 
-                    color={darkGreen} 
+                <MaterialIcons
+                    name={isChecked ? 'check-box' : 'check-box-outline-blank'}
+                    size={24}
+                    color={darkGreen}
                 />
             </TouchableOpacity>
 
-            {/* Label com link para abrir modal */}
             <TouchableOpacity onPress={() => setIsModalVisiblePrivacy(!isModalVisiblePrivacy)}>
                 <Text style={{ marginLeft: 10, color: blue }}>{label}</Text>
             </TouchableOpacity>
@@ -300,25 +322,24 @@ const CheckboxPrivacy = ({ label, isChecked, setIsChecked, isModalVisiblePrivacy
                 >
                     <InfoThermsPrivacy />
                     <Pressable
-                                onPress={() => setIsModalVisiblePrivacy(false)}
-                                style={{
-                                    backgroundColor: 'red',
-                                    padding: 5,
-                                    borderRadius: 5,
-                                    marginTop: 10,
-                                    width: '40%',
-                                    height: '5%',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                }}
-                            >
-                                <Text style={{ color: white, fontWeight: 'bold' }}>Fechar</Text>
+                        onPress={() => setIsModalVisiblePrivacy(false)}
+                        style={{
+                            backgroundColor: 'red',
+                            padding: 5,
+                            borderRadius: 5,
+                            marginTop: 10,
+                            width: '40%',
+                            height: '5%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            display: 'flex',
+                        }}
+                    >
+                        <Text style={{ color: white, fontWeight: 'bold' }}>Fechar</Text>
                     </Pressable>
 
                 </Modal>
-            )}  
-
+            )}
         </View>
     );
 };
