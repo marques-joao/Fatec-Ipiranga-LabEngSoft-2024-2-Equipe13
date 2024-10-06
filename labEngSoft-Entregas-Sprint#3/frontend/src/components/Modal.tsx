@@ -1,4 +1,4 @@
-import { Modal as RNModal, ModalProps, View } from "react-native";
+import { Modal as RNModal, ModalProps } from "react-native";
 import { ModalContentStyledContainer } from "./styles";
 
 type PROPS = ModalProps & {

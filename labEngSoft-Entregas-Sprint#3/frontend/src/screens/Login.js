@@ -43,7 +43,7 @@ import axios from 'axios';
 // Colors
 const {darkGreen, white, grayThree} = Colors;
 
-const Login = ({navigation}) => { 
+const Login = ({ navigation }) => { 
 
     const [hidePassword, setHidePassword] = useState(true);
     const [message, setMessage] = useState();

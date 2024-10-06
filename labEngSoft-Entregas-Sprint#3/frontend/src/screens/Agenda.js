@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { StyledContainer, InnerContainer, FormTitleContent, StyledButton, ButtonText } from './styles';
+import { StyledContainer, InnerContainer, FormTitleContent, StyledButton, ButtonText } from '../components/styles';
 import { Calendar } from 'react-native-calendars'; // Pacote de calendário para Expo
 
 const Agenda = () => {

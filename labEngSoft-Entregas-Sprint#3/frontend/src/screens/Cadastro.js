@@ -85,14 +85,9 @@ const Cadastro = ({ navigation }) => {
         setMessageType(type);
     };
 
-    // Função para formatar o celular
     const formatPhoneNumber = (value) => {
-        const cleaned = ('' + value).replace(/\D/g, ''); // Remove tudo que não for número
-        const match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
-        if (match) {
-            return `(${match[1]}) ${match[2]}-${match[3]}`;
-        }
-        return value;
+        const cleaned = ('' + value).replace(/\D/g, '');
+        return cleaned;
     };
 
     return (
@@ -109,9 +104,9 @@ const Cadastro = ({ navigation }) => {
                         </FormTitle>
 
                         <Formik
-                            initialValues={{ nomeCompleto: '', email: '', senha: '', confirmaSenha: '', contatoEmergencia: '', celularEmergencia: '' }}
+                            initialValues={{ nomeCompleto: '', email: '', senha: '', confirmaSenha: '', nomeEmergencia: '', contatoEmergencia: '' }}
                             onSubmit={(values, { setSubmitting }) => {
-                                if (values.email == '' || values.senha == '' || values.nomeCompleto == '' || values.confirmaSenha == '' || values.contatoEmergencia == '' || values.celularEmergencia == '') {
+                                if (values.email == '' || values.senha == '' || values.nomeCompleto == '' || values.confirmaSenha == '' || values.nomeEmergencia == '' || values.contatoEmergencia == '') {
                                     handleMessage('Por favor, preencha todos os campos!');
                                     setSubmitting(false);
                                 } else if (values.senha !== values.confirmaSenha) {
@@ -145,26 +140,24 @@ const Cadastro = ({ navigation }) => {
                                         keyboardType='email-address'
                                     />
 
-                                    {/* Nome do Contato de Emergência */}
                                     <MyTextInput
                                         label='Nome do Contato de Emergência'
                                         icon='person'
                                         placeholder='Nome do contato'
                                         placeholderTextColor={grayThree}
-                                        onChangeText={handleChange('contatoEmergencia')}
-                                        onBlur={handleBlur('contatoEmergencia')}
-                                        value={values.contatoEmergencia}
+                                        onChangeText={handleChange('nomeEmergencia')}
+                                        onBlur={handleBlur('nomeEmergencia')}
+                                        value={values.nomeEmergencia}
                                     />
 
-                                    {/* Celular do Contato de Emergência */}
                                     <MyTextInput
                                         label='Celular do Contato de Emergência'
                                         icon='phone'
-                                        placeholder='(11) 12345-6789'
+                                        placeholder='11912345678'
                                         placeholderTextColor={grayThree}
-                                        onChangeText={(value) => setFieldValue('celularEmergencia', formatPhoneNumber(value))}
-                                        onBlur={handleBlur('celularEmergencia')}
-                                        value={values.celularEmergencia}
+                                        onChangeText={(value) => setFieldValue('contatoEmergencia', formatPhoneNumber(value))}
+                                        onBlur={handleBlur('contatoEmergencia')}
+                                        value={values.contatoEmergencia}
                                         keyboardType='phone-pad'
                                     />
 
@@ -193,7 +186,7 @@ const Cadastro = ({ navigation }) => {
                                         secureTextEntry={hideConfirmPassword}
                                         isPassword={true}
                                         hidePassword={hideConfirmPassword}
-                                        setHideConfirmPassword={setHideConfirmPassword}
+                                        setHidePassword={setHideConfirmPassword}
                                     />
 
                                     <CheckboxConditions
