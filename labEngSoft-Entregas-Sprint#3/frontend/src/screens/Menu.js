@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, TouchableOpacity, Image, Text, ScrollView } from 'react-native';
 import {
   StyledContainer,
@@ -12,7 +12,7 @@ import {
 const Menu = ({ navigation, route }) => {
   // const { nome } = route.params;
   const nome = 'João';
-  const userRole = 'Cuidador';
+  const userRole = 'Idoso';
 
   const renderMenuButton = (title, iconSource, onPress) => (
     <TouchableOpacity onPress={onPress} style={{ alignItems: 'center', margin: 20 }}>
@@ -41,7 +41,7 @@ const Menu = ({ navigation, route }) => {
                 {renderMenuButton('Relatórios', require('../assets/Relatorio.png'), () => {})}
               </View>
               <View style={{ width: '50%', alignItems: 'center' }}>
-                {renderMenuButton('Dados de Saúde', require('../assets/DadosSaude.png'), () => {})}
+                {renderMenuButton('Dados de Saúde', require('../assets/DadosSaude.png'), () => navigation.navigate('DadosSaude'))}
               </View>
               <View style={{ width: '50%', alignItems: 'center' }}>
                 {renderMenuButton('Maps', require('../assets/Maps.png'), () => {})}

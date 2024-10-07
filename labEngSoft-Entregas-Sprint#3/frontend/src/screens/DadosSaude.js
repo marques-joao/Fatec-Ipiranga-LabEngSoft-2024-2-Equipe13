@@ -10,14 +10,14 @@ import {
   Line
 } from './../components/styles';
 
-const DadosSaude = () => {
+const DadosSaude = ({ navigation }) => {
   const [tipoSanguineo, setTipoSanguineo] = useState('');
   const [alergias, setAlergias] = useState([]);
   const [doencas, setDoencas] = useState([]);
   const [oxigenacao, setOxigenacao] = useState('');
   const [batimento, setBatimento] = useState('');
   const [acionamentoSOS, setAcionamentoSOS] = useState({
-    data: '01/10/2024',
+    data: '07/10/2024',
     motivo: 'Queda de pressão'
   });
   const [ist, setIst] = useState([]);
