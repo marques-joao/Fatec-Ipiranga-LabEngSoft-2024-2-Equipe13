@@ -5,7 +5,8 @@ import axios from 'axios';
 
 const PopUpSOS = ({ navigation, route }) => {
   const [isVisible, setIsVisible] = useState(true);
-  const { idUsuario } = route.params;
+  // const { idUsuario } = route.params;
+  const idUsuario = 1;
 
   const closePopUp = () => {
     setIsVisible(false);

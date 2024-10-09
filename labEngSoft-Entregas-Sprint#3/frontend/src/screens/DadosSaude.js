@@ -10,7 +10,12 @@ import {
   Line
 } from './../components/styles';
 
-const DadosSaude = ({ navigation }) => {
+import axios from 'axios';
+
+const DadosSaude = ({ navigation, route }) => {
+  // const { idUsuario } = route.params;
+  const idUsuario = 1;
+
   const [tipoSanguineo, setTipoSanguineo] = useState('');
   const [alergias, setAlergias] = useState([]);
   const [doencas, setDoencas] = useState([]);
@@ -47,34 +52,45 @@ const DadosSaude = ({ navigation }) => {
     }
   };
 
-  const handleSave = () => {
-    console.log({
-      tipoSanguineo,
-      alergias,
-      doencas,
-      oxigenacao,
-      batimento,
-      acionamentoSOS,
-      ist,
-      medicamentos
-    });
+  const handleSave = async () => {
+
+    // const url = `http://192.168.15.117:8080/saude/${idUsuario}`;
+
+    // const dadosSaude = {
+    //   tipoSanguineo,
+    //   alergias,
+    //   doencas,
+    //   oxigenacao,
+    //   batimento,
+    //   ist,
+    //   medicamentos
+    // };
+
+    // try {
+    //   const response = await axios.post(url, dadosSaude);
+
+    //   console.log('Dados salvos com sucesso!', response.data);
+    // } catch (error) {
+    //   console.log('Erro ao salvar os dados de saúde:', error);
+    // }
+
+    navigation.navigate('Menu');
+
   };
 
   return (
     <StyledContainer>
       <ScrollView>
-        {/* Título e imagem */}
         <Text style={styles.formTitle}>Dados de Saúde</Text>
         <Image source={require('../assets/DadosSaude.png')} style={styles.image} />
 
-        {/* Tipo Sanguíneo */}
         <StyledInputLabel style={styles.questionText}>Qual seu tipo sanguíneo?</StyledInputLabel>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={tipoSanguineo}
             onValueChange={(itemValue) => setTipoSanguineo(itemValue)}
             style={styles.picker}
-            dropdownIconColor="white" // Cor da seta para baixo
+            dropdownIconColor="white"
           >
             <Picker.Item label="Clique aqui para selecionar" value="" style={styles.pickerItem} />
             {opcoesTipoSanguineo.map((tipo, index) => (
@@ -83,7 +99,6 @@ const DadosSaude = ({ navigation }) => {
           </Picker>
         </View>
 
-        {/* Alergias */}
         <StyledInputLabel style={styles.questionText}>Tem alguma alergia?</StyledInputLabel>
         <View style={styles.pickerContainer}>
           <Picker
@@ -104,7 +119,6 @@ const DadosSaude = ({ navigation }) => {
           editable={false}
         />
 
-        {/* Doenças */}
         <StyledInputLabel style={styles.questionText}>Histórico de Doença</StyledInputLabel>
         <View style={styles.pickerContainer}>
           <Picker
@@ -125,7 +139,6 @@ const DadosSaude = ({ navigation }) => {
           editable={false}
         />
 
-        {/* Oxigenação Sanguínea */}
         <StyledInputLabel style={styles.questionText}>Oxigenação Sanguínea (%)</StyledInputLabel>
         <TextInput
           placeholder="Digite a oxigenação sanguínea"
@@ -135,7 +148,6 @@ const DadosSaude = ({ navigation }) => {
           style={styles.textInput}
         />
 
-        {/* Batimento Cardíaco */}
         <StyledInputLabel style={styles.questionText}>Batimento Cardíaco (BPM)</StyledInputLabel>
         <TextInput
           placeholder="Digite o batimento cardíaco"
@@ -145,15 +157,6 @@ const DadosSaude = ({ navigation }) => {
           style={styles.textInput}
         />
 
-        {/* Acionamento do SOS */}
-        <StyledInputLabel style={[styles.questionText, styles.highlightedSection]}>Acionamento do SOS</StyledInputLabel>
-        <Text style={styles.sosText}>Último acionamento: {acionamentoSOS.data}</Text>
-        <Text style={styles.sosText}>Motivo: {acionamentoSOS.motivo}</Text>
-
-        {/* Espaço extra entre SOS e IST */}
-        <View style={styles.extraSpace} />
-
-        {/* IST */}
         <StyledInputLabel style={styles.questionText}>IST</StyledInputLabel>
         <View style={styles.pickerContainer}>
           <Picker
@@ -161,7 +164,7 @@ const DadosSaude = ({ navigation }) => {
             onValueChange={(itemValue) => addSelection(ist, setIst, itemValue)}
             style={styles.picker}
             dropdownIconColor="white"
-          >
+            >
             <Picker.Item label="Clique aqui para selecionar" value="" style={styles.pickerItem} />
             {opcoesIST.map((istItem, index) => (
               <Picker.Item key={index} label={istItem} value={istItem} />
@@ -172,9 +175,8 @@ const DadosSaude = ({ navigation }) => {
           multiline={true}
           value={ist.join(', ')}
           editable={false}
-        />
+          />
 
-        {/* Medicamentos Tomados */}
         <StyledInputLabel style={styles.questionText}>Medicamentos Tomados</StyledInputLabel>
         <StyledTextInput
           placeholder="Digite os medicamentos e dosagens separados por vírgula"
@@ -183,9 +185,14 @@ const DadosSaude = ({ navigation }) => {
           onChangeText={setMedicamentos}
         />
 
+          {/* <StyledInputLabel style={[styles.questionText, styles.highlightedSection]}>Acionamento do SOS</StyledInputLabel>
+          <Text style={styles.sosText}>Último acionamento: {acionamentoSOS.data}</Text>
+          <Text style={styles.sosText}>Motivo: {acionamentoSOS.motivo}</Text>
+  
+          <View style={styles.extraSpace} /> */}
+
         <Line />
 
-        {/* Botão de Salvar */}
         <StyledButton onPress={handleSave}>
           <ButtonText>Salvar Dados</ButtonText>
         </StyledButton>

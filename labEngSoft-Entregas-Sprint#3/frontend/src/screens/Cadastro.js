@@ -68,7 +68,7 @@ const Cadastro = ({ navigation }) => {
                 if (status != 'SUCCESS') {
                     handleMessage(message, status);
                 } else {
-                    navigation.navigate('Menu', { ...data });
+                    navigation.navigate('Login', { ...data });
                 }
 
                 setSubmitting(false);

@@ -30,7 +30,7 @@ const Menu = ({ navigation, route }) => {
             <Avatar source={require('../assets/logo-vitalcare.png')} />
           </ExtraView>
           <PageTitle>{nome}</PageTitle>
-          <PageSubTitle>{userRole}</PageSubTitle>
+          {/* <PageSubTitle>{userRole}</PageSubTitle> */}
 
           <InnerContainer>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>

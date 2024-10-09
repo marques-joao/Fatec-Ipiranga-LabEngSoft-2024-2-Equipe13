@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, Text, Image, StyleSheet } from 'react-native';
 import { StyledContainer, StyledTextInput, StyledInputLabel, Line } from './../components/styles';
 
 const InfoSaude = ({ navigation, route }) => {
   const {
-    tipoSanguineo = '',
-    alergias = [],
-    doencas = [],
-    oxigenacao = '',
-    batimento = '',
-    acionamentoSOS = { data: '', motivo: '' },
-    ist = [],
-    medicamentos = ''
+    tipoSanguineo = 'A+',
+    alergias = ['Lactose, Ovo'],
+    doencas = ['Diabetes Tipo 1'],
+    oxigenacao = '98',
+    batimento = '87',
+    // acionamentoSOS = { data: '', motivo: '' },
+    ist = ['HPV'],
+    medicamentos = 'Losartana 50mg'
   } = route.params || {};
+
+  const [dataAcionamentoSOS, setDataAcionamentoSOS] = useState('');
+  const [motivoAcionamentoSOS, setmotivoAcionamentoSOS] = useState('');
 
   return (
     <StyledContainer>
@@ -20,8 +23,16 @@ const InfoSaude = ({ navigation, route }) => {
         <Text style={styles.formTitle}>Informações de Saúde</Text>
         <Image source={require('../assets/DadosSaude.png')} style={styles.image} />
 
+        {/* <StyledInputLabel style={styles.questionText}>Tipo Sanguíneo:</StyledInputLabel>
+        <Text style={styles.infoText}>{tipoSanguineo}</Text> */}
+
         <StyledInputLabel style={styles.questionText}>Tipo Sanguíneo:</StyledInputLabel>
-        <Text style={styles.infoText}>{tipoSanguineo}</Text>
+        <StyledTextInput
+          multiline={true}
+          value={tipoSanguineo}
+          editable={false}
+          style={styles.textArea}
+        />
 
         <StyledInputLabel style={styles.questionText}>Alergias:</StyledInputLabel>
         <StyledTextInput
@@ -39,15 +50,27 @@ const InfoSaude = ({ navigation, route }) => {
           style={styles.textArea}
         />
 
+        {/* <StyledInputLabel style={styles.questionText}>Oxigenação Sanguínea (%):</StyledInputLabel>
+        <Text style={styles.infoText}>{oxigenacao}</Text> */}
+
         <StyledInputLabel style={styles.questionText}>Oxigenação Sanguínea (%):</StyledInputLabel>
-        <Text style={styles.infoText}>{oxigenacao}</Text>
+        <StyledTextInput
+          multiline={true}
+          value={oxigenacao}
+          editable={false}
+          style={styles.textArea}
+        />
+
+        {/* <StyledInputLabel style={styles.questionText}>Batimento Cardíaco (BPM):</StyledInputLabel>
+        <Text style={styles.infoText}>{batimento}</Text> */}
 
         <StyledInputLabel style={styles.questionText}>Batimento Cardíaco (BPM):</StyledInputLabel>
-        <Text style={styles.infoText}>{batimento}</Text>
-
-        <StyledInputLabel style={[styles.questionText, styles.highlightedSection]}>Acionamento do SOS</StyledInputLabel>
-        <Text style={styles.sosText}>Último acionamento: {acionamentoSOS.data}</Text>
-        <Text style={styles.sosText}>Motivo: {acionamentoSOS.motivo}</Text>
+        <StyledTextInput
+          multiline={true}
+          value={batimento}
+          editable={false}
+          style={styles.textArea}
+        />
 
         <StyledInputLabel style={styles.questionText}>IST:</StyledInputLabel>
         <StyledTextInput
@@ -63,6 +86,23 @@ const InfoSaude = ({ navigation, route }) => {
           value={medicamentos}
           editable={false}
           style={styles.textArea}
+        />
+
+        <StyledInputLabel style={[styles.questionText, styles.highlightedSection]}>Acionamento do SOS</StyledInputLabel>
+        {/* <Text style={styles.sosText}>Último acionamento: {acionamentoSOS.data}</Text>
+        <Text style={styles.sosText}>Motivo: {acionamentoSOS.motivo}</Text> */}
+        <StyledTextInput
+          placeholder="Digite a data do último acionamento"
+          multiline={true}
+          value={dataAcionamentoSOS}
+          onChangeText={setDataAcionamentoSOS}
+        />
+
+        <StyledTextInput
+          placeholder="Digite o motivo do último acionamento"
+          multiline={true}
+          value={motivoAcionamentoSOS}
+          onChangeText={setmotivoAcionamentoSOS}
         />
 
         <Line />
