@@ -28,7 +28,7 @@ public class UsuarioService {
     @Autowired
     private WhatsAppService whatsAppService;
 
-    public RegisterResponseDTO adicionarUsuario(RegisterRequestDTO registerRequestDTO) {
+    public RegisterResponseDTO realizarCadastro(RegisterRequestDTO registerRequestDTO) {
         Optional<UsuarioEntity> usuarioEntity = this.usuarioRepository.findByEmail(
                 registerRequestDTO.getEmail()
         );

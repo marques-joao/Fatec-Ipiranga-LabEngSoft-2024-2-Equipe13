@@ -20,7 +20,7 @@ public class UsuarioController {
 
     @PostMapping("/cadastro")
     public ResponseEntity<RegisterResponseDTO> adicionarUsuario(@RequestBody RegisterRequestDTO registerRequestDTO) {
-        RegisterResponseDTO response = usuarioService.adicionarUsuario(registerRequestDTO);
+        RegisterResponseDTO response = usuarioService.realizarCadastro(registerRequestDTO);
 
         if ("SUCCESS".equals(response.getStatus())) {
             return ResponseEntity.status(HttpStatus.CREATED).body(response);

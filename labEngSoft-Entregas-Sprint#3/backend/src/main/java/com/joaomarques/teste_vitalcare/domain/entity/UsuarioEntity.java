@@ -29,10 +29,14 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private String senha;
 
+    @Column(nullable = false)
     private String contatoEmergencia;
 
     @OneToMany(mappedBy = "usuarioEntity")
     private List<ChamadaSOSEntity> chamadasSOS;
+
+    @OneToMany(mappedBy = "usuarioEntity")
+    private List<SaudeUsuarioEntity> saudeUsuario;
 
     public UsuarioEntity(Long idUsuario, String nome, String email, String contatoEmergencia) {
         this.idUsuario = idUsuario;
