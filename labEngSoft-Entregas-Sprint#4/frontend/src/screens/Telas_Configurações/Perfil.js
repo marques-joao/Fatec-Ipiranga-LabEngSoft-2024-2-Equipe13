@@ -24,6 +24,7 @@ const Perfil = () => {
 
   // Estados de edição dos campos do perfil
   const [editNome, setEditNome] = useState(false);
+  const [editEmail, setEditEmail] = useState(false);
   const [editNomeEmergencia, setEditNomeEmergencia] = useState(false);
   const [editTelefoneEmergencia, setEditTelefoneEmergencia] = useState(false);
 
@@ -101,6 +102,7 @@ const Perfil = () => {
     setEditNomeEmergencia(false);
     setEditTelefoneEmergencia(false);
     setShowSaveButton(false);
+    setEditEmail(false);
     Alert.alert('Sucesso', 'Alterações salvas com sucesso!');
   };
 
@@ -130,10 +132,11 @@ const Perfil = () => {
         <TextInput
           style={styles.input}
           value={email}
+          onChangeText={(value) => handleFieldChange(value, setEmail)}
           placeholder="E-mail"
-          editable={false} // Não é editável diretamente
+          editable={editEmail} 
         />
-        <TouchableOpacity onPress={() => navigation.navigate('TrocaEmail')}>
+        <TouchableOpacity onPress={() => setEditEmail(true)}>
           <MaterialIcons name="edit" size={24} color="#8DBF4D" />
         </TouchableOpacity>
       </View>
