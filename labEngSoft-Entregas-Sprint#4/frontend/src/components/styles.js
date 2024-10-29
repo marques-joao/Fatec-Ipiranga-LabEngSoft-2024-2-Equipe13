@@ -222,7 +222,7 @@ export const ModalContentStyledContainer = styled.View`
 
 export const InfoThermsContainer = styled.View`
     background-color: ${white};
-    width: 90%;
+    width: 100%;
     height: 70%;
     border-radius: 5px;
     shadow-color: ${black};
@@ -231,10 +231,11 @@ export const InfoThermsContainer = styled.View`
     shadow-radius: 3.84px;
     elevation: 5;
     padding: 10px;
+    flex: 1;
 `;
 
 export const InfoThermsContent = styled.ScrollView`
-    flex-grow: 1;
+    flex-grow: 2;
 `;
 
 export const InfoThermsTitle = styled.Text`
