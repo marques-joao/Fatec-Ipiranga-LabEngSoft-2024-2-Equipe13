@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#fff',
     paddingTop: 40, // Espaçamento superior
+    paddingBottom: 20,
     paddingHorizontal: 20,
     alignItems: 'center',
   },
