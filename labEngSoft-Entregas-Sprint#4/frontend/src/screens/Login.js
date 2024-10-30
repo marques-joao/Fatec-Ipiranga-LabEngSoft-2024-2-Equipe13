@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { storeData } from '../utils/storageUtils'
 import { StatusBar } from 'expo-status-bar';
 // Forms
 import { Formik } from 'formik';
@@ -64,8 +66,9 @@ const Login = ({ navigation }) => {
             if (status != 'SUCCESS') {
                 handleMessage(message, status);
             } else {
-                navigation.navigate('Menu', {... data});
-                console.log(data);
+                storeData(data);
+                navigation.navigate('Menu');
+                console.log(message);
             }
 
             setSubmitting(false);

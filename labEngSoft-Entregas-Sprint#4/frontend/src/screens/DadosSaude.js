@@ -9,22 +9,22 @@ import {
   StyledInputLabel,
   Line
 } from './../components/styles';
+import { getData } from '../utils/storageUtils';
 
 import axios from 'axios';
 
-const DadosSaude = ({ navigation, route }) => {
+const DadosSaude = ({ navigation }) => {
   // const { idUsuario } = route.params;
-  const idUsuario = 1;
 
   const [tipoSanguineo, setTipoSanguineo] = useState('');
   const [alergias, setAlergias] = useState([]);
   const [doencas, setDoencas] = useState([]);
   const [oxigenacao, setOxigenacao] = useState('');
   const [batimento, setBatimento] = useState('');
-  const [acionamentoSOS, setAcionamentoSOS] = useState({
-    data: '07/10/2024',
-    motivo: 'Queda de pressão'
-  });
+  // const [acionamentoSOS, setAcionamentoSOS] = useState({
+  //   data: '07/10/2024',
+  //   motivo: 'Queda de pressão'
+  // });
   const [ist, setIst] = useState([]);
   const [medicamentos, setMedicamentos] = useState('');
 
@@ -53,30 +53,59 @@ const DadosSaude = ({ navigation, route }) => {
   };
 
   const handleSave = async () => {
+    try {
+      const infoUsuario = await getData();
+      const idUsuario = infoUsuario.idUsuario;
 
-    // const url = `http://192.168.15.117:8080/saude/${idUsuario}`;
+      if (idUsuario) {
+        const url = `http://192.168.15.117:8080/saude/${idUsuario}`;
 
-    // const dadosSaude = {
-    //   tipoSanguineo,
-    //   alergias,
-    //   doencas,
-    //   oxigenacao,
-    //   batimento,
-    //   ist,
-    //   medicamentos
-    // };
+        const listaMedicamentos = medicamentos.split(',').map(med => med.trim());
 
-    // try {
-    //   const response = await axios.post(url, dadosSaude);
+        const dadosSaude = {
+          tipoSanguineo,
+          alergias,
+          doencas,
+          oxigenacao,
+          batimento,
+          ist,
+          medicamentos: listaMedicamentos
+        };
 
-    //   console.log('Dados salvos com sucesso!', response.data);
-    // } catch (error) {
-    //   console.log('Erro ao salvar os dados de saúde:', error);
-    // }
+        const response = await axios.post(url, dadosSaude);
+        console.log('Dados de saúde salvos com sucesso!', response.data);
+      } else {
+        console.log('ID do usuário não encontrado');
+      }
+    } catch (error) {
+        console.log('Erro ao adicionar dados de saúde:', error);
+    }
 
     navigation.navigate('Menu');
 
   };
+
+    // const handleSave = async () {
+      // const url = `http://192.168.15.117:8080/saude/${idUsuario}`;
+  
+      // const dadosSaude = {
+      //   tipoSanguineo,
+      //   alergias,
+      //   doencas,
+      //   oxigenacao,
+      //   batimento,
+      //   ist,
+      //   medicamentos
+      // };
+  
+      // try {
+      //   const response = await axios.post(url, dadosSaude);
+  
+      //   console.log('Dados salvos com sucesso!', response.data);
+      // } catch (error) {
+      //   console.log('Erro ao salvar os dados de saúde:', error);
+      // }
+    // };
 
   return (
     <StyledContainer>

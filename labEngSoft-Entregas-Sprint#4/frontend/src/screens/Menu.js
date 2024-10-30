@@ -35,7 +35,7 @@ const Menu = ({ navigation, route }) => {
           <InnerContainer>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
               <View style={{ width: '50%', alignItems: 'center' }}>
-                {renderMenuButton('Agenda', require('../assets/Agenda.png'), () => {})}
+                {renderMenuButton('Agenda', require('../assets/Agenda.png'), () => navigation.navigate('Agenda'))}
               </View>
               <View style={{ width: '50%', alignItems: 'center' }}>
                 {renderMenuButton('Relatórios', require('../assets/Relatorio.png'), () => {})}
@@ -47,10 +47,10 @@ const Menu = ({ navigation, route }) => {
                 {renderMenuButton('Maps', require('../assets/Maps.png'), () => {})}
               </View>
               <View style={{ width: '50%', alignItems: 'center' }}>
-                {renderMenuButton('Configurações', require('../assets/Configuração.png'), () => {})}
+                {renderMenuButton('Configurações', require('../assets/Configuração.png'), () => navigation.navigate('Configuracao'))}
               </View>
               <View style={{ width: '50%', alignItems: 'center' }}>
-                {renderMenuButton('SOS', require('../assets/SOS.png'), () => navigation.navigate('PopUpSOS', {...route.params}))}
+                {renderMenuButton('SOS', require('../assets/SOS.png'), () => navigation.navigate('PopUpSOS'))}
               </View>
             </View>
           </InnerContainer>

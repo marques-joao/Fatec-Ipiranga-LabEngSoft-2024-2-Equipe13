@@ -327,7 +327,7 @@ const Agenda = () => {
             <Picker.Item label="1 ano" value="1 ano" />
           </Picker>
 
-          <Text style={styles.inputLabel}>Cor do Evento</Text>
+          <Text style={styles.inputLabel}>Classificação do Evento</Text>
           <Picker
             selectedValue={selectedColor}
             onValueChange={(itemValue) => {

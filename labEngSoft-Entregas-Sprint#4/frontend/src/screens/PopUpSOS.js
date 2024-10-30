@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Modal, Text, View, TouchableOpacity } from 'react-native';
-import { ModalContentStyledContainer, InfoThermsContainer } from './../components/styles';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const PopUpSOS = ({ navigation, route }) => {
+import { getData } from '../utils/storageUtils';
+import { Modal, Text, View, TouchableOpacity } from 'react-native';
+import { ModalContentStyledContainer, InfoThermsContainer } from './../components/styles';
+
+const PopUpSOS = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState(true);
-  // const { idUsuario } = route.params;
-  const idUsuario = 1;
 
   const closePopUp = () => {
     setIsVisible(false);
@@ -14,19 +15,24 @@ const PopUpSOS = ({ navigation, route }) => {
   };
 
   const sendSOS = async () => {
-
-    const url = `http://192.168.15.117:8080/usuarios/${idUsuario}/sos`;
-
     try {
-      const response = await axios.post(url);
+        const infoUsuario = await getData();
+        const idUsuario = infoUsuario.idUsuario;
 
-      console.log('SOS enviado com sucesso!', response.data);
+        if (idUsuario) {
+            const url = `http://192.168.15.117:8080/usuarios/${idUsuario}/sos`;
+
+            const response = await axios.post(url);
+            console.log('SOS enviado com sucesso!', response.data);
+        } else {
+            console.log('ID do usuário não encontrado');
+        }
     } catch (error) {
-      console.log('Erro ao enviar SOS:', error);
+        console.log('Erro ao enviar SOS:', error);
     }
-    
+
     closePopUp();
-    navigation.navigate('InfoSaude'); 
+    navigation.navigate('InfoSaude');
   };
 
   return (
