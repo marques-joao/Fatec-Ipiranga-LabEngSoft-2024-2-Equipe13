@@ -39,7 +39,7 @@ const Perfil = () => {
 
   // Função para adicionar um novo contato de emergência
   const adicionarContatoEmergencia = () => {
-    if (contatosEmergencia.length < 3) {
+    if (contatosEmergencia.length < 2) {
       setModalVisible(true);
     } else {
       Alert.alert('Aviso', 'O número limite de contatos de emergência já foi atingido.');
@@ -49,6 +49,7 @@ const Perfil = () => {
   // Função para salvar o novo contato de emergência
   const salvarContatoEmergencia = () => {
     if (novoContatoNome.trim() === '' || novoContatoTelefone.trim() === '') {
+      console.log(contatosEmergencia);
       Alert.alert('Erro', 'Por favor, preencha os campos de nome e telefone.');
       return;
     }
