@@ -1,18 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Image, Text, ScrollView } from 'react-native';
+import { getData } from '../utils/storageUtils';
 import {
   StyledContainer,
   InnerContainer,
   PageTitle,
-  PageSubTitle,
   ExtraView,
   Avatar,
 } from './../components/styles';
 
-const Menu = ({ navigation, route }) => {
-  // const { nome } = route.params;
-  const nome = 'João';
-  const userRole = 'Idoso';
+const Menu = ({ navigation }) => {
+
+  const [nome, setNome] = useState('');
+
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      try {
+        const infoUsuario = await getData();
+       
+        if (infoUsuario && infoUsuario.nome) {
+          let nomeCompleto = infoUsuario.nome;
+          nomeCompleto = nomeCompleto.split(' ');
+
+          setNome(nomeCompleto[0]);
+        }
+      } catch (e) {
+        console.log('Erro ao ler informacoes do usuario:', e);  
+      }
+    };
+
+    fetchUsuario();
+  
+  }, []);
 
   const renderMenuButton = (title, iconSource, onPress) => (
     <TouchableOpacity onPress={onPress} style={{ alignItems: 'center', margin: 20 }}>
@@ -30,7 +49,6 @@ const Menu = ({ navigation, route }) => {
             <Avatar source={require('../assets/logo-vitalcare.png')} />
           </ExtraView>
           <PageTitle>{nome}</PageTitle>
-          {/* <PageSubTitle>{userRole}</PageSubTitle> */}
 
           <InnerContainer>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>

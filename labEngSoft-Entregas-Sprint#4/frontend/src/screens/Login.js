@@ -61,8 +61,8 @@ const Login = ({ navigation }) => {
         .post(url, credentials)
         .then((response) => {
             const result = response.data;
-            const {status, message, data} = result;
-
+            const {data, message, status} = result;
+            
             if (status != 'SUCCESS') {
                 handleMessage(message, status);
             } else {
@@ -70,7 +70,7 @@ const Login = ({ navigation }) => {
                 navigation.navigate('Menu');
                 console.log(message);
             }
-
+            
             setSubmitting(false);
             
         })
@@ -78,7 +78,7 @@ const Login = ({ navigation }) => {
             console.log(error.response.data);
             console.log(credentials);
             setSubmitting(false);
-            handleMessage('Senha inválida');
+            handleMessage('Ocorreu um erro interno. Volte mais tarde!');
         })
     }
 
