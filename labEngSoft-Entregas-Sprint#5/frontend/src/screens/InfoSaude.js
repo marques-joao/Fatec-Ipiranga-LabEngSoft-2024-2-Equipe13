@@ -1,21 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, Image, StyleSheet } from 'react-native';
+import { getData } from '../utils/storageUtils';
 import { StyledContainer, StyledTextInput, StyledInputLabel, Line } from './../components/styles';
 
-const InfoSaude = ({ navigation, route }) => {
-  const {
-    tipoSanguineo = 'A+',
-    alergias = ['Lactose, Ovo'],
-    doencas = ['Diabetes Tipo 1'],
-    oxigenacao = '98',
-    batimento = '87',
-    // acionamentoSOS = { data: '', motivo: '' },
-    ist = ['HPV'],
-    medicamentos = 'Losartana 50mg'
-  } = route.params || {};
+const InfoSaude = () => {
 
+  const [tipoSanguineo, setTipoSanguineo] = useState('');
+  const [alergias, setAlergias] = useState(['']);
+  const [doencas, setDoencas] = useState(['']);
+  const [oxigenacao, setOxigenacao] = useState('');
+  const [batimento, setBatimento] = useState('');
+  const [ist, setIst] = useState(['']);
+  const [medicamentos, setMedicamentos] = useState(['']);
   const [dataAcionamentoSOS, setDataAcionamentoSOS] = useState('');
   const [motivoAcionamentoSOS, setmotivoAcionamentoSOS] = useState('');
+
+  // useEffect(() => {
+  //   const fetchUsuario = async () => {
+  //     try {
+  //       const infoUsuario = await getData();
+       
+  //       if (infoUsuario) {
+  //         setTipoSanguineo(infoUsuario.tipoSanguineo);
+  //         setAlergias(infoUsuario.alergias);
+  //         setDoencas(infoUsuario.doencas);
+  //         setOxigenacao(infoUsuario.oxigenacao);
+  //         setBatimento(infoUsuario.batimento);
+  //         setIst(infoUsuario.ist);
+  //         setMedicamentos(infoUsuario.medicamentos);
+  //       }
+  //     } catch (e) {
+  //       console.log('Erro ao ler informacoes do usuario:', e);  
+  //     }
+  //   };
+
+  //   fetchUsuario();
+  
+  // }, []);
 
   return (
     <StyledContainer>
@@ -83,7 +104,7 @@ const InfoSaude = ({ navigation, route }) => {
         <StyledInputLabel style={styles.questionText}>Medicamentos Tomados:</StyledInputLabel>
         <StyledTextInput
           multiline={true}
-          value={medicamentos}
+          value={medicamentos.join(', ')}
           editable={false}
           style={styles.textArea}
         />
