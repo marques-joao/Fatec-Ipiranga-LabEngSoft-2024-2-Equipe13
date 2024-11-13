@@ -32,14 +32,15 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private String contatoEmergencia;
 
-    @OneToMany(mappedBy = "usuarioEntity")
+    @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChamadaSOSEntity> chamadasSOS;
 
-    @OneToMany(mappedBy = "usuarioEntity")
+    @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SaudeUsuarioEntity> saudeUsuario;
 
-    @OneToOne(mappedBy = "usuarioEntity")
+    @OneToOne(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private AgendaEntity agendaEntity;
+
 
     public UsuarioEntity(Long idUsuario, String nome, String email, String contatoEmergencia) {
         this.idUsuario = idUsuario;
