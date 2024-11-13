@@ -18,9 +18,11 @@ const PopUpSOS = ({ navigation }) => {
     try {
         const infoUsuario = await getData();
         const idUsuario = infoUsuario.idUsuario;
+        console.log(infoUsuario);
 
         if (idUsuario) {
             const url = `http://192.168.15.117:8080/usuarios/${idUsuario}/sos`;
+            // const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/${idUsuario}/sos`;
 
             const response = await axios.post(url);
             console.log('SOS enviado com sucesso!', response.data);

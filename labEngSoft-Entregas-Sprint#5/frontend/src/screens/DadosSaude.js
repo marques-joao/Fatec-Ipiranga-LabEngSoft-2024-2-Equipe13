@@ -59,6 +59,7 @@ const DadosSaude = ({ navigation }) => {
 
       if (idUsuario) {
         const url = `http://192.168.15.117:8080/saude/${idUsuario}`;
+        // const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/saude/${idUsuario}`;
 
         const listaMedicamentos = medicamentos.split(',').map(med => med.trim());
 

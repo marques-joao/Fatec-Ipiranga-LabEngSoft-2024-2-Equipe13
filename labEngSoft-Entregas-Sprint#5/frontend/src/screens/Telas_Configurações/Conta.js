@@ -15,6 +15,7 @@ export default function TelaConta({ navigation }) {
       const idUsuario = infoUsuario.idUsuario;
 
       const url = `http://192.168.15.117:8080/usuarios/${idUsuario}`;
+      // const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/${idUsuario}`;
 
       const response = await axios.delete(url);
 

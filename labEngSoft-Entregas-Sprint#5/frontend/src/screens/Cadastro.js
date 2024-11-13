@@ -58,6 +58,7 @@ const Cadastro = ({ navigation }) => {
         handleMessage(null);
 
         const url = 'http://192.168.15.117:8080/usuarios/cadastro';
+        // const url = 'https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/cadastro';
 
         axios
             .post(url, credentials)
@@ -76,7 +77,7 @@ const Cadastro = ({ navigation }) => {
             .catch((error) => {
                 console.log(error.response.data);
                 setSubmitting(false);
-                handleMessage('Ocorreu um erro. Verifique sua conexão com a internet e tente novamente.');
+                handleMessage('Ocorreu um erro interno. Volte mais tarde!');
             });
     };
 
