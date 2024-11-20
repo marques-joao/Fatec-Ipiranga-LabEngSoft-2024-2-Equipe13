@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.joaomarques</groupId>
-	<artifactId>teste-vitalcare</artifactId>
+	<artifactId>vitalcare</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>teste-vitalcare</name>
+	<name>vitalcare</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -59,6 +59,12 @@
 			<groupId>com.twilio.sdk</groupId>
 			<artifactId>twilio</artifactId>
 			<version>10.5.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 	</dependencies>

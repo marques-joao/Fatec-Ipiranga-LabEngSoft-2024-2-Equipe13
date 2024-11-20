@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:teste-vitalcare_db;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    url: jdbc:h2:mem:vitalcare_db;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     hikari:
@@ -14,6 +14,9 @@ spring:
         web-allow-others: true
   jpa:
     open-in-view: false
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
     show-sql: true
     hibernate:
       ddl-auto: update

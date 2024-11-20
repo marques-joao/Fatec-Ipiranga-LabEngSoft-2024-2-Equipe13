@@ -1,5 +1,5 @@
 spring:
   application:
-    name: teste-vitalcare
+    name: vitalcare
   profiles:
-    active: dev
+    active: prod
