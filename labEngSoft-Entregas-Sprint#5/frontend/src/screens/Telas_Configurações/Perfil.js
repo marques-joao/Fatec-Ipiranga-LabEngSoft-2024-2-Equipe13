@@ -43,11 +43,12 @@ const Perfil = ({ navigation }) => {
         const response = await axios.get(url)
         
         const dadosUsuario = response.data;
-
+        console.log(dadosUsuario)
         setNome(dadosUsuario.nome);
         setEmail(dadosUsuario.email);
         setSenha(dadosUsuario.senha);
         setTelefoneEmergencia(dadosUsuario.contatoEmergencia);
+        setNomeEmergencia(dadosUsuario.nomeContatoEmergencia);
       }
     } catch (e) {
       console.log('Erro ao ler informacoes do usuario:', e); 
@@ -128,7 +129,8 @@ const Perfil = ({ navigation }) => {
           nomeCompleto: nome,
           email: email,
           senha: senha,
-          contatoEmergencia: telefoneEmergencia
+          contatoEmergencia: telefoneEmergencia,
+          nomeContatoEmergencia: nomeEmergencia
         }
     
         console.log(dadosUsuario);

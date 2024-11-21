@@ -32,22 +32,22 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private String contatoEmergencia;
 
+    private String nomeContatoEmergencia;
+
     @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChamadaSOSEntity> chamadasSOS;
 
     @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SaudeUsuarioEntity> saudeUsuario;
 
-//    @OneToOne(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private AgendaEntity agendaEntity;
-
     @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventoEntity> eventos;
 
-    public UsuarioEntity(Long idUsuario, String nome, String email, String contatoEmergencia) {
+    public UsuarioEntity(Long idUsuario, String nome, String email, String contatoEmergencia, String nomeContatoEmergencia) {
         this.idUsuario = idUsuario;
         this.nome = nome;
         this.email = email;
         this.contatoEmergencia = contatoEmergencia;
+        this.nomeContatoEmergencia = nomeContatoEmergencia;
     }
 }

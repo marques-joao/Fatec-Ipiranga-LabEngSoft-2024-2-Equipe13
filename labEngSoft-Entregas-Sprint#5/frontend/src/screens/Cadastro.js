@@ -133,9 +133,9 @@ const Cadastro = ({ navigation }) => {
                         </FormTitle>
 
                         <Formik
-                            initialValues={{ nomeCompleto: '', email: '', senha: '', confirmaSenha: '', nomeEmergencia: '', contatoEmergencia: '' }}
+                            initialValues={{ nomeCompleto: '', email: '', senha: '', confirmaSenha: '', nomeContatoEmergencia: '', contatoEmergencia: '' }}
                             onSubmit={(values, { setSubmitting }) => {
-                                if (values.email == '' || values.senha == '' || values.nomeCompleto == '' || values.confirmaSenha == '' || values.nomeEmergencia == '' || values.contatoEmergencia == '') {
+                                if (values.email == '' || values.senha == '' || values.nomeCompleto == '' || values.confirmaSenha == '' || values.nomeContatoEmergencia == '' || values.contatoEmergencia == '') {
                                     handleMessage('Por favor, preencha todos os campos!');
                                     setSubmitting(false);
                                 } else if (values.senha !== values.confirmaSenha) {
@@ -174,9 +174,9 @@ const Cadastro = ({ navigation }) => {
                                         icon='person'
                                         placeholder='Nome do contato'
                                         placeholderTextColor={grayThree}
-                                        onChangeText={handleChange('nomeEmergencia')}
-                                        onBlur={handleBlur('nomeEmergencia')}
-                                        value={values.nomeEmergencia}
+                                        onChangeText={handleChange('nomeContatoEmergencia')}
+                                        onBlur={handleBlur('nomeContatoEmergencia')}
+                                        value={values.nomeContatoEmergencia}
                                     />
 
                                     <MyTextInput

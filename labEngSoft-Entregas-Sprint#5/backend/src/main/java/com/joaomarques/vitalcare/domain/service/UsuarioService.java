@@ -41,6 +41,7 @@ public class UsuarioService {
                 newUsuarioEntity.setEmail(registerRequestDTO.getEmail());
                 newUsuarioEntity.setSenha(registerRequestDTO.getSenha());
                 newUsuarioEntity.setContatoEmergencia(registerRequestDTO.getContatoEmergencia());
+                newUsuarioEntity.setNomeContatoEmergencia(registerRequestDTO.getNomeContatoEmergencia());
 
                 this.usuarioRepository.save(newUsuarioEntity);
 
@@ -68,6 +69,7 @@ public class UsuarioService {
                 usuarioEntity.setSenha(registerRequestDTO.getSenha());
                 usuarioEntity.setEmail(registerRequestDTO.getEmail());
                 usuarioEntity.setContatoEmergencia(registerRequestDTO.getContatoEmergencia());
+                usuarioEntity.setNomeContatoEmergencia(registerRequestDTO.getNomeContatoEmergencia());
 
                 this.usuarioRepository.save(usuarioEntity);
 
@@ -96,7 +98,8 @@ public class UsuarioService {
                         usuarioEntity.getIdUsuario(),
                         usuarioEntity.getNome(),
                         usuarioEntity.getEmail(),
-                        usuarioEntity.getContatoEmergencia()
+                        usuarioEntity.getContatoEmergencia(),
+                        usuarioEntity.getNomeContatoEmergencia()
                 );
 
                 return new LoginResponseDTO("SUCCESS", "Login realizado com sucesso", usuarioDTO);
