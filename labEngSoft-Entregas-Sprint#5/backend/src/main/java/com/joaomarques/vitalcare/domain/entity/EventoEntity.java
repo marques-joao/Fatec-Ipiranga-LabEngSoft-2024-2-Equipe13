@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -32,13 +33,15 @@ public class EventoEntity {
     private String nome;
 
     @Column(nullable = false)
-    private LocalTime horarioLembrete;
+    private String lembrete;
 
     @Column(nullable = false)
     private String tipoEvento;
 
     private String endereco;
     private String descricao;
+    private String recorrencia;
+    private LocalTime horarioLembrete;
 
     @ManyToOne
     @JsonIgnore
@@ -50,6 +53,8 @@ public class EventoEntity {
             if (horario == null) {
                 throw new IllegalStateException("O horário do evento não foi definido.");
             }
+
+            LocalDateTime eventoDateTime = LocalDateTime.of(data, horario);
 
             switch(momentoLembrete) {
                 case "No horário do evento":
@@ -68,14 +73,15 @@ public class EventoEntity {
                     this.horarioLembrete = horario.minusHours(1);
                     break;
                 case "1 dia antes":
-                    this.horarioLembrete = horario.minusHours(24);
+                    LocalDateTime lembrete1DiaAntes = eventoDateTime.minusDays(1);
+                    this.horarioLembrete = lembrete1DiaAntes.toLocalTime();
                     break;
                 default:
                     throw new IllegalArgumentException("Opção de lembrete inválida: " + momentoLembrete);
             }
 
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
         }
     }
 

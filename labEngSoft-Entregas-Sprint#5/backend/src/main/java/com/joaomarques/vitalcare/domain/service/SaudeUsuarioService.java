@@ -34,7 +34,7 @@ public class SaudeUsuarioService {
         try {
             return saudeUsuarioRepository.findAll();
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return null;
         }
     }
@@ -43,7 +43,7 @@ public class SaudeUsuarioService {
         try {
             return saudeUsuarioRepository.findById(idSaude);
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -52,7 +52,7 @@ public class SaudeUsuarioService {
         try {
             return saudeUsuarioRepository.save(saudeUsuario);
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return null;
         }
     }
@@ -61,7 +61,7 @@ public class SaudeUsuarioService {
         try {
             saudeUsuarioRepository.deleteById(idSaude);
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ public class SaudeUsuarioService {
         try {
             return saudeUsuarioRepository.findByUsuarioEntityIdUsuario(idUsuario);
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return null;
         }
     }

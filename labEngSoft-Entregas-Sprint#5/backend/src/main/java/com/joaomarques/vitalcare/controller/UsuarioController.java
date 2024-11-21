@@ -54,7 +54,6 @@ public class UsuarioController {
     public ResponseEntity<?> deletarConta(@PathVariable Long idUsuario) {
         try {
             usuarioService.deletarConta(idUsuario);
-
             return ResponseEntity.noContent().build();
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno no servidor");

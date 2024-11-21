@@ -121,6 +121,10 @@ public class UsuarioService {
         }
     }
 
+    public UsuarioEntity buscarPorId(Long id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
     public void deletarConta(Long idUsuario) {
         try {
             usuarioRepository.deleteById(idUsuario);

@@ -72,7 +72,7 @@ public class SaudeUsuarioController {
 
             return ResponseEntity.ok(dadosSaude);
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -88,7 +88,7 @@ public class SaudeUsuarioController {
 
             return ResponseEntity.ok(dadosSaude);
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
