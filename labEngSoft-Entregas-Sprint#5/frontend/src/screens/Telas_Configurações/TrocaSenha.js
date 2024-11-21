@@ -30,9 +30,9 @@ const TrocaSenha = () => {
 
   const handleUpdatePassword = () => {
     if (oldPassword && newPassword && arePasswordsMatching) {
-      Alert.alert('Senha atualizada com sucesso!');
+      Alert.alert('Senha alterada', 'Senha atualizada com sucesso!');
     } else {
-      Alert.alert('Por favor, preencha todas as informações corretamente.');
+      Alert.alert('Atenção', 'Por favor, preencha todas as informações corretamente.');
     }
   };
 

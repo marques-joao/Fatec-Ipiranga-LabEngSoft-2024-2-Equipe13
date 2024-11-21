@@ -54,6 +54,13 @@ const Cadastro = ({ navigation }) => {
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
 
+    // Estado para requisitos de senha
+    const [passwordRequirements, setPasswordRequirements] = useState({
+        uppercase: false,
+        number: false,
+        length: false,
+    });
+
     const handleRegister = (credentials, setSubmitting) => {
         handleMessage(null);
 
@@ -100,6 +107,16 @@ const Cadastro = ({ navigation }) => {
                 [{ text: 'OK' }]
             );
         }
+    };
+
+    // Função para validar a senha
+    const validatePassword = (newPassword) => {
+        const requirements = {
+            uppercase: /[A-Z]/.test(newPassword),
+            number: /[0-9]/.test(newPassword),
+            length: newPassword.length >= 6,
+        };
+        setPasswordRequirements(requirements);
     };
 
     return (
@@ -173,7 +190,7 @@ const Cadastro = ({ navigation }) => {
                                         keyboardType='phone-pad'
                                     />
 
-                                    <MyTextInput
+                                    {/* <MyTextInput
                                         label='Senha'
                                         icon='lock'
                                         placeholder='• • • • • • • •'
@@ -185,7 +202,35 @@ const Cadastro = ({ navigation }) => {
                                         isPassword={true}
                                         hidePassword={hidePassword}
                                         setHidePassword={setHidePassword}
+                                    /> */}
+                                    <MyTextInput
+                                        label='Senha'
+                                        icon='lock'
+                                        placeholder='• • • • • • • •'
+                                        placeholderTextColor={grayThree}
+                                        onChangeText={(text) => {
+                                            handleChange('senha')(text);
+                                            validatePassword(text); // Chama a validação da senha
+                                        }}
+                                        onBlur={handleBlur('senha')}
+                                        value={values.senha}
+                                        secureTextEntry={hidePassword}
+                                        isPassword={true}
+                                        hidePassword={hidePassword}
+                                        setHidePassword={setHidePassword}
                                     />
+
+                                    <View>
+                                        <Text style={{ color: passwordRequirements.uppercase ? 'green' : 'red' }}>
+                                            • Deve conter pelo menos uma letra maiúscula
+                                        </Text>
+                                        <Text style={{ color: passwordRequirements.number ? 'green' : 'red' }}>
+                                            • Deve conter pelo menos um número
+                                        </Text>
+                                        <Text style={{ color: passwordRequirements.length ? 'green' : 'red' }}>
+                                            • Deve ter pelo menos 6 caracteres
+                                        </Text>
+                                    </View>
 
                                     <MyTextInput
                                         label='Confirmar senha'

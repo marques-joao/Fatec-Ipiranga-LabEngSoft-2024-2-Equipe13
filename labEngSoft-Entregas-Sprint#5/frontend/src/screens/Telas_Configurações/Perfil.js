@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   View, 
   Text, 
@@ -10,17 +10,16 @@ import {
   Alert 
 } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { getData } from '../../utils/storageUtils';
 
-const Perfil = () => {
-  const navigation = useNavigation();
+const Perfil = ({ navigation }) => {
 
   // Estados das informações do perfil
-  const [nome, setNome] = useState('João da Silva');
-  const [email, setEmail] = useState('joaos****@email.com');
-  const [senha, setSenha] = useState('******');
-  const [nomeEmergencia, setNomeEmergencia] = useState('Maria da Silva');
-  const [telefoneEmergencia, setTelefoneEmergencia] = useState('1191234****');
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [nomeEmergencia, setNomeEmergencia] = useState('');
+  const [telefoneEmergencia, setTelefoneEmergencia] = useState('');
 
   // Estados de edição dos campos do perfil
   const [editNome, setEditNome] = useState(false);
@@ -36,6 +35,26 @@ const Perfil = () => {
 
   // Estado para controlar a exibição do botão "Salvar"
   const [showSaveButton, setShowSaveButton] = useState(false);
+
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      try {
+        const infoUsuario = await getData();
+  
+        if (infoUsuario) {
+          setNome(infoUsuario.nome);
+          setEmail(infoUsuario.email);
+          setSenha('• • • • • • • •');
+          setTelefoneEmergencia(infoUsuario.contatoEmergencia);
+        }
+      } catch (e) {
+        console.log('Erro ao ler informacoes do usuario:', e); 
+      }
+
+    };
+
+    fetchUsuario();
+  }, []);
 
   // Função para adicionar um novo contato de emergência
   const adicionarContatoEmergencia = () => {
@@ -54,12 +73,12 @@ const Perfil = () => {
       return;
     }
 
-    const maskedTelefone = novoContatoTelefone.replace(/(\d{4})(\d{4})/, '****$2');
-    setContatosEmergencia([...contatosEmergencia, { nome: novoContatoNome, telefone: maskedTelefone, isEditing: false }]);
-    setModalVisible(false);
-    setNovoContatoNome('');
-    setNovoContatoTelefone('');
-    setShowSaveButton(true);
+    // const maskedTelefone = novoContatoTelefone.replace(/(\d{4})(\d{4})/, '****$2');
+    // setContatosEmergencia([...contatosEmergencia, { nome: novoContatoNome, telefone: maskedTelefone, isEditing: false }]);
+    // setModalVisible(false);
+    // setNovoContatoNome('');
+    // setNovoContatoTelefone('');
+    // setShowSaveButton(true);
   };
 
   // Função para deletar um contato de emergência com restrição de um contato mínimo

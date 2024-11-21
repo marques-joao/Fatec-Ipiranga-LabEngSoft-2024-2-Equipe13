@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, View, Image, StyleSheet, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import {
@@ -14,7 +14,6 @@ import { getData } from '../utils/storageUtils';
 import axios from 'axios';
 
 const DadosSaude = ({ navigation }) => {
-  // const { idUsuario } = route.params;
 
   const [tipoSanguineo, setTipoSanguineo] = useState('');
   const [alergias, setAlergias] = useState([]);
@@ -86,27 +85,40 @@ const DadosSaude = ({ navigation }) => {
 
   };
 
-    // const handleSave = async () {
-      // const url = `http://192.168.15.117:8080/saude/${idUsuario}`;
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      try {
+        const infoUsuario = await getData();
   
-      // const dadosSaude = {
-      //   tipoSanguineo,
-      //   alergias,
-      //   doencas,
-      //   oxigenacao,
-      //   batimento,
-      //   ist,
-      //   medicamentos
-      // };
+        if (infoUsuario && infoUsuario.idUsuario) {
+          const idUsuario = infoUsuario.idUsuario;
+          const url = `http://192.168.15.117:8080/saude/usuarios/${idUsuario}`;
+          
+          const response = await axios.get(url);
+          
+          const usuarioData = response.data; 
+          
+          if (Array.isArray(usuarioData) && usuarioData.length > 0) {
+            const usuario = usuarioData[usuarioData.length - 1];
   
-      // try {
-      //   const response = await axios.post(url, dadosSaude);
+            setTipoSanguineo(usuario.tipoSanguineo ?? '');
+            setAlergias(usuario.alergia?.alergias ?? []);
+            setDoencas(usuario.doenca?.doencas ?? []); 
+            setOxigenacao(usuario.oxigenacao ?? '');
+            setBatimento(usuario.batimento ?? '');
+            setIst(usuario.ist?.ists ?? []); 
+            setMedicamentos(usuario.medicamento?.medicamentos?.join(', ') ?? '');
+          } else {
+            console.log('Nenhum dado encontrado para o usuário.');
+          }
+        }
+      } catch (e) {
+        console.log('Erro ao ler informacoes do usuario:', e);  
+      }
+    };
   
-      //   console.log('Dados salvos com sucesso!', response.data);
-      // } catch (error) {
-      //   console.log('Erro ao salvar os dados de saúde:', error);
-      // }
-    // };
+    fetchUsuario();
+  }, []);
 
   return (
     <StyledContainer>
@@ -174,7 +186,7 @@ const DadosSaude = ({ navigation }) => {
           placeholder="Digite a oxigenação sanguínea"
           keyboardType="numeric"
           value={oxigenacao}
-          onChangeText={(text) => setOxigenacao(text.slice(0, 3))} // Limitar a 3 caracteres
+          onChangeText={(text) => setOxigenacao(text.slice(0, 3))}
           style={styles.textInput}
         />
 
@@ -183,7 +195,7 @@ const DadosSaude = ({ navigation }) => {
           placeholder="Digite o batimento cardíaco"
           keyboardType="numeric"
           value={batimento}
-          onChangeText={(text) => setBatimento(text.slice(0, 3))} // Limitar a 3 caracteres
+          onChangeText={(text) => setBatimento(text.slice(0, 3))}
           style={styles.textInput}
         />
 
@@ -231,21 +243,20 @@ const DadosSaude = ({ navigation }) => {
   );
 };
 
-// Estilos adicionais
 const styles = StyleSheet.create({
   formTitle: {
-    fontSize: 36, // Aumentar ainda mais o tamanho da fonte
+    fontSize: 36,
     color: '#8DBF4D',
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign: 'center' // Centralizar o título
+    textAlign: 'center'
   },
   image: {
-    width: '60%', // Diminuir mais o tamanho da imagem
-    height: 120, // Altura ajustada
+    width: '60%',
+    height: 120,
     resizeMode: 'contain',
     marginBottom: 20,
-    alignSelf: 'center' // Centralizar a imagem
+    alignSelf: 'center' 
   },
   questionText: {
     fontSize: 18,
@@ -257,12 +268,12 @@ const styles = StyleSheet.create({
     fontSize: 14
   },
   pickerContainer: {
-    backgroundColor: '#8DBF4D', // Fundo verde para o Picker
+    backgroundColor: '#8DBF4D', 
     borderRadius: 8,
     marginBottom: 10
   },
   picker: {
-    color: 'white', // Texto branco dentro do Picker
+    color: 'white', 
   },
   highlightedSection: {
     backgroundColor: '#e0f7e9',

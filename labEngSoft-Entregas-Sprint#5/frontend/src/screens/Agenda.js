@@ -5,8 +5,8 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import moment from 'moment'; // Moment.js para manipulação de datas
-import styles from './../components/AgendaStyles'; // Estilização da Agenda
+import moment from 'moment'; 
+import styles from './../components/AgendaStyles';
 import { getData } from '../utils/storageUtils';
 import axios from 'axios';
 
@@ -20,8 +20,8 @@ LocaleConfig.locales['pt-br'] = {
 };
 LocaleConfig.defaultLocale = 'pt-br';
 
-let eventIdCounter = 1;  // ID incremental para eventos
-let recorrenciaIdCounter = 1;  // ID incremental para recorrências
+let eventIdCounter = 1;  
+let recorrenciaIdCounter = 1;
 
 const Agenda = () => {
   const [selectedDay, setSelectedDay] = useState('');
@@ -33,15 +33,6 @@ const Agenda = () => {
   const [selectedColor, setSelectedColor] = useState('');
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [fetchedEvents, setFetchedEvents] = useState([]);
-
-  // const eventTypes = {
-  //   remedios: { label: "🟩 - Remédios", color: "#8DBF4D" },
-  //   consultas: { label: "🟦 - Consultas", color: "#4D79BF" },
-  //   exames: { label: "🟪 - Exames", color: "#8D4DBF" },
-  //   exercicios: { label: "🟧 - Exercícios Físicos", color: "#FFA500" },
-  //   outros: { label: "🟨 - Outros", color: "#FFD700" }
-  // };
 
   useEffect(() => {
     const today = moment().format('YYYY-MM-DD');
@@ -77,26 +68,23 @@ const Agenda = () => {
     setModalVisible(true);
   }, [selectedLembrete]);
 
-  // Gera um ID único para eventos
   const generateEventId = useCallback(() => {
     return eventIdCounter++;
   }, []);
 
-  // Gera um ID único para recorrências
   const generaterecorrenciaId = useCallback(() => {
     return recorrenciaIdCounter++;
   }, []);
 
-  // Obtém a data original da recorrência (ou cria uma nova para eventos recém-criados)
   const getrecorrenciaStartDate = useCallback((recorrenciaId) => {
     for (let date in events) {
       const dayEvents = events[date];
       const recorrenciaEvent = dayEvents.find(event => event.recorrenciaId === recorrenciaId);
       if (recorrenciaEvent) {
-        return recorrenciaEvent.recorrenciaStartDate || date;  // Usa a data salva ou a primeira ocorrência
+        return recorrenciaEvent.recorrenciaStartDate || date; 
       }
     }
-    return selectedDay;  // Se não houver recorrência anterior, usa o dia atual
+    return selectedDay; 
   }, [events, selectedDay]);
 
   const saveEvent = useCallback(async () => {
@@ -109,35 +97,29 @@ const Agenda = () => {
 
     const newEvent = {
       ...eventDetails,
-      id: eventDetails.id || generateEventId(),  // Gera ID único se o evento for novo
+      id: eventDetails.id || generateEventId(),  
       color: selectedColor,
     };
 
-    // Verifica se o evento já existe (para edição) ou se é novo (para ser adicionado)
     const existingEventIndex = updatedEvents.findIndex(event => event.id === newEvent.id);
 
     if (existingEventIndex > -1) {
-      // Substitui o evento existente
       updatedEvents[existingEventIndex] = newEvent;
     } else {
-      // Adiciona um novo evento
       updatedEvents.push(newEvent);
     }
 
-    // Gerenciamento de recorrência
     if (eventDetails.recorrencia) {
-      const recorrenciaId = eventDetails.recorrenciaId || generaterecorrenciaId();  // Gera ID para a recorrência
-      const recorrenciaStartDate = eventDetails.recorrenciaStartDate || getrecorrenciaStartDate(recorrenciaId);  // Usa a data de origem da recorrência
+      const recorrenciaId = eventDetails.recorrenciaId || generaterecorrenciaId(); 
+      const recorrenciaStartDate = eventDetails.recorrenciaStartDate || getrecorrenciaStartDate(recorrenciaId);
       newEvent.recorrenciaId = recorrenciaId;
-      newEvent.recorrenciaStartDate = recorrenciaStartDate;  // Salva a data de origem da recorrência
+      newEvent.recorrenciaStartDate = recorrenciaStartDate;
 
-      // Remove eventos antigos da mesma recorrência (se houver)
       Object.keys(events).forEach(day => {
         const dayEvents = events[day]?.filter(event => event.recorrenciaId !== recorrenciaId) || [];
         setEvents(prevEvents => ({ ...prevEvents, [day]: dayEvents }));
       });
 
-      // Cria eventos recorrentes baseados na data de origem
       const recorrenciaMap = {
         '1 dia': 1,
         '1 semana': 7,
@@ -148,71 +130,21 @@ const Agenda = () => {
 
       const recorrenciaDays = recorrenciaMap[eventDetails.recorrencia];
 
-      // Gera eventos para todos os dias de acordo com a recorrência escolhida, partindo da data original
       for (let i = 0; i < recorrenciaDays; i++) {
         const newDate = moment(recorrenciaStartDate).add(i, 'days').format('YYYY-MM-DD');
         let recurringEvents = events[newDate] ? [...events[newDate]] : [];
-        // Remove qualquer evento antigo da mesma recorrência
         recurringEvents = recurringEvents.filter(event => event.recorrenciaId !== recorrenciaId);
-        // Adiciona o evento recorrente para cada dia do intervalo
         recurringEvents.push({ ...newEvent, id: generateEventId(), recorrenciaId, recorrenciaStartDate });
 
         setEvents(prevEvents => ({ ...prevEvents, [newDate]: recurringEvents }));
       }
     }
 
-    // Atualiza o dia selecionado com o novo ou editado evento
-    // setEvents(prevEvents => ({ ...prevEvents, [selectedDay]: updatedEvents }));
+    setEvents(prevEvents => ({ ...prevEvents, [selectedDay]: updatedEvents }));
+    setModalVisible(false); 
 
-    // setModalVisible(false); // Fecha o modal ao salvar
-
-    try {
-      const infoUsuario = await getData();
-      const idUsuario = infoUsuario.idUsuario;
-
-      if (idUsuario) {
-        const url = `http://192.168.15.117:8080/eventos/${idUsuario}`;
-        
-        const response = await axios.post(url, newEvent);
-        console.log('Evento criado com sucesso!', response.data);
-        
-        setModalVisible(false); 
-      } else {
-        console.log('ID do usuário não encontrado');
-      }
-
-    } catch(error) {
-      console.error('Erro ao salvar evento:', error);
-      Alert.alert('Erro', 'Não foi possível salvar o evento.');
-    }
   }, [eventDetails, selectedDay, selectedColor, events, generateEventId, generaterecorrenciaId, getrecorrenciaStartDate]);
 
-  const fetchEvents = useCallback(async () => {
-    try {
-      const infoUsuario = await getData();
-      const idUsuario = infoUsuario.idUsuario;
-
-      if (idUsuario) {
-        const url = `http://192.168.15.117:8080/eventos/usuarios/${idUsuario}`;
-        const response = await axios.get(url);
-
-        if (response.data.length === 0) {
-          console.log('Não há eventos salvos para esse usuário');
-          setFetchedEvents([]);
-        }
-
-        setFetchedEvents(response.data);
-      } else {
-        console.log('ID do usuário não encontrado');
-      }
-    } catch (error) {
-      console.error('Erro ao buscar eventos:', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchEvents();
-  }, [fetchEvents, selectedDay]);
 
   const deleteEvent = useCallback((id) => {
     let updatedEvents = events[selectedDay]?.filter(event => event.id !== id) || [];
@@ -259,58 +191,18 @@ const Agenda = () => {
     setEventDetails({ ...eventDetails, horario: moment(currentTime).format('HH:mm') });
   }, [selectedTime, eventDetails]);
 
-  // const renderedEvents = useMemo(() => {
-  //   // Ordena eventos pelo horário, caso exista mais de um no mesmo dia
-  //   return events[selectedDay]?.sort((a, b) => moment(a.horario, 'HH:mm').diff(moment(b.horario, 'HH:mm')))
-  //     .map((event) => (
-  //       <TouchableOpacity key={event.id} onPress={() => openEventModal(event)}>
-  //         <View style={[styles.eventBlock, { backgroundColor: event.color }]}>
-  //           <Text style={styles.eventText}>
-  //             {event.horario} - {event.nome}: {event.descricao}
-  //           </Text>
-  //         </View>
-  //       </TouchableOpacity>
-  //   ));
-  // }, [events, selectedDay, openEventModal]);
-
-  // const renderedEvents = fetchedEvents
-  // .filter(event => event.data === selectedDay) 
-  // .sort((a, b) => moment(a.horario, 'HH:mm').diff(moment(b.horario, 'HH:mm')))
-  // .map((event) => (
-  //   <TouchableOpacity key={event.id} onPress={() => openEventModal(event)}>
-  //     <View style={[styles.eventBlock, { backgroundColor: event.color }]}>
-  //       <Text style={styles.eventText}>
-  //         {event.horario} - {event.nome}: {event.descricao}
-  //       </Text>
-  //     </View>
-  //   </TouchableOpacity>
-  // ));
-
-  // const renderedEvents = Array.isArray(fetchedEvents) ? fetchedEvents
-  // .filter(event => event.data === selectedDay) 
-  // .sort((a, b) => moment(a.horario, 'HH:mm').diff(moment(b.horario, 'HH:mm')))
-  // .map((event) => (
-  //   <TouchableOpacity key={event.id} onPress={() => openEventModal(event)}>
-  //     <View style={[styles.eventBlock, { backgroundColor: event.color }]}>
-  //       <Text style={styles.eventText}>
-  //         {event.horario} - {event.nome}: {event.descricao}
-  //       </Text>
-  //     </View>
-  //   </TouchableOpacity>
-  // )) : null;
-
-  const renderedEvents = Array.isArray(fetchedEvents) ? fetchedEvents
-  .filter(event => event.data === selectedDay) 
-  .sort((a, b) => moment(a.horario, 'HH:mm').diff(moment(b.horario, 'HH:mm')))
-  .map((event) => (
-    <TouchableOpacity key={event.id} onPress={() => openEventModal(event)}>
-      <View style={[styles.eventBlock, { backgroundColor: event.color }]}>
-        <Text style={styles.eventText}>
-          {event.horario} - {event.nome}: {event.descricao}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  )) : null;
+  const renderedEvents = useMemo(() => {
+    return events[selectedDay]?.sort((a, b) => moment(a.horario, 'HH:mm').diff(moment(b.horario, 'HH:mm')))
+      .map((event) => (
+        <TouchableOpacity key={event.id} onPress={() => openEventModal(event)}>
+          <View style={[styles.eventBlock, { backgroundColor: event.color }]}>
+            <Text style={styles.eventText}>
+              {event.horario} - {event.nome}: {event.descricao}
+            </Text>
+          </View>
+        </TouchableOpacity>
+    ));
+  }, [events, selectedDay, openEventModal]);
 
   return (
     <View style={styles.container}>
@@ -324,14 +216,14 @@ const Agenda = () => {
         markedDates={{
           [selectedDay]: { 
             selected: true, 
-            selectedColor: '#8DBF4D', // Garante que o círculo verde apareça sempre
+            selectedColor: '#8DBF4D',
           },
           ...Object.keys(events).reduce((acc, date) => {
             acc[date] = { 
               marked: events[date]?.length > 0, 
               dotColor: '#8DBF4D', 
-              selected: selectedDay === date, // Garante que o dia selecionado seja destacado
-              selectedColor: selectedDay === date ? '#8DBF4D' : undefined, // Aplica a cor somente no dia selecionado
+              selected: selectedDay === date, 
+              selectedColor: selectedDay === date ? '#8DBF4D' : undefined, 
             };
             return acc;
           }, {}),
@@ -356,7 +248,6 @@ const Agenda = () => {
       </TouchableOpacity>
 
       <ScrollView style={styles.eventList}>
-        {/* {renderedEvents} */}
         {renderedEvents}
       </ScrollView>
 
@@ -438,8 +329,6 @@ const Agenda = () => {
           <Picker
             selectedValue={selectedColor}
             onValueChange={(itemValue) => {
-              // const selectedType = eventTypes[itemValue];
-              // setEventDetails({ ...eventDetails, color: selectedType ? itemValue : '' });
               setEventDetails({ ...eventDetails, color: itemValue });
               setSelectedColor(itemValue);
             }}
@@ -451,15 +340,6 @@ const Agenda = () => {
             <Picker.Item label="🟪 - Exames" value="#8D4DBF" />
             <Picker.Item label="🟧 - Exercícios Físicos" value="#FFA500" />
             <Picker.Item label="🟨 - Outros" value="#FFD700" />
-
-            {/* <Picker.Item label="Classifique seu evento" value="" />
-            {Object.keys(eventTypes).map((key) => (
-              <Picker.Item 
-                key={key} 
-                label={eventTypes[key].label} 
-                value={key}
-              />
-            ))} */}
           </Picker>
 
           <TouchableOpacity onPress={saveEvent} style={styles.saveButton}>
