@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, Image, StyleSheet } from 'react-native';
 import { getData } from '../utils/storageUtils';
 import { StyledContainer, StyledTextInput, StyledInputLabel, Line } from './../components/styles';
+import axios from 'axios';
 
 const InfoSaude = () => {
 
@@ -15,28 +16,40 @@ const InfoSaude = () => {
   const [dataAcionamentoSOS, setDataAcionamentoSOS] = useState('');
   const [motivoAcionamentoSOS, setmotivoAcionamentoSOS] = useState('');
 
-  // useEffect(() => {
-  //   const fetchUsuario = async () => {
-  //     try {
-  //       const infoUsuario = await getData();
-       
-  //       if (infoUsuario) {
-  //         setTipoSanguineo(infoUsuario.tipoSanguineo);
-  //         setAlergias(infoUsuario.alergias);
-  //         setDoencas(infoUsuario.doencas);
-  //         setOxigenacao(infoUsuario.oxigenacao);
-  //         setBatimento(infoUsuario.batimento);
-  //         setIst(infoUsuario.ist);
-  //         setMedicamentos(infoUsuario.medicamentos);
-  //       }
-  //     } catch (e) {
-  //       console.log('Erro ao ler informacoes do usuario:', e);  
-  //     }
-  //   };
-
-  //   fetchUsuario();
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      try {
+        const infoUsuario = await getData();
   
-  // }, []);
+        if (infoUsuario && infoUsuario.idUsuario) {
+          const idUsuario = infoUsuario.idUsuario;
+          const url = `http://192.168.15.117:8080/saude/usuarios/${idUsuario}`;
+          
+          const response = await axios.get(url);
+          
+          const usuarioData = response.data; 
+          
+          if (Array.isArray(usuarioData) && usuarioData.length > 0) {
+            const usuario = usuarioData[usuarioData.length - 1];
+  
+            setTipoSanguineo(usuario.tipoSanguineo ?? '');
+            setAlergias(usuario.alergia?.alergias ?? []);
+            setDoencas(usuario.doenca?.doencas ?? []); 
+            setOxigenacao(usuario.oxigenacao ?? '');
+            setBatimento(usuario.batimento ?? '');
+            setIst(usuario.ist?.ists ?? []); 
+            setMedicamentos(usuario.medicamento?.medicamentos ?? []); 
+          } else {
+            console.log('Nenhum dado encontrado para o usuário.');
+          }
+        }
+      } catch (e) {
+        console.log('Erro ao ler informacoes do usuario:', e);  
+      }
+    };
+  
+    fetchUsuario();
+  }, []);
 
   return (
     <StyledContainer>
