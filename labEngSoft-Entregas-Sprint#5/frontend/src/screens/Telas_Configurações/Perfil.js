@@ -11,52 +11,54 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { getData } from '../../utils/storageUtils';
+import axios from 'axios';
 
 const Perfil = ({ navigation }) => {
 
-  // Estados das informações do perfil
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [nomeEmergencia, setNomeEmergencia] = useState('');
   const [telefoneEmergencia, setTelefoneEmergencia] = useState('');
 
-  // Estados de edição dos campos do perfil
   const [editNome, setEditNome] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
   const [editNomeEmergencia, setEditNomeEmergencia] = useState(false);
   const [editTelefoneEmergencia, setEditTelefoneEmergencia] = useState(false);
 
-  // Estados para gerenciar contatos de emergência adicionais
   const [contatosEmergencia, setContatosEmergencia] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [novoContatoNome, setNovoContatoNome] = useState('');
   const [novoContatoTelefone, setNovoContatoTelefone] = useState('');
 
-  // Estado para controlar a exibição do botão "Salvar"
   const [showSaveButton, setShowSaveButton] = useState(false);
 
-  useEffect(() => {
-    const fetchUsuario = async () => {
-      try {
-        const infoUsuario = await getData();
-  
-        if (infoUsuario) {
-          setNome(infoUsuario.nome);
-          setEmail(infoUsuario.email);
-          setSenha('• • • • • • • •');
-          setTelefoneEmergencia(infoUsuario.contatoEmergencia);
-        }
-      } catch (e) {
-        console.log('Erro ao ler informacoes do usuario:', e); 
+  const fetchUsuario = async () => {
+    try {
+      const infoUsuario = await getData();
+      const idUsuario = infoUsuario.idUsuario;
+
+      if (idUsuario) {
+        const url = `http://192.168.15.117:8080/usuarios/${idUsuario}`;
+        const response = await axios.get(url)
+        
+        const dadosUsuario = response.data;
+
+        setNome(dadosUsuario.nome);
+        setEmail(dadosUsuario.email);
+        setSenha(dadosUsuario.senha);
+        setTelefoneEmergencia(dadosUsuario.contatoEmergencia);
       }
+    } catch (e) {
+      console.log('Erro ao ler informacoes do usuario:', e); 
+    }
 
-    };
+  };
 
+  useEffect(() => {
     fetchUsuario();
   }, []);
 
-  // Função para adicionar um novo contato de emergência
   const adicionarContatoEmergencia = () => {
     if (contatosEmergencia.length < 2) {
       setModalVisible(true);
@@ -65,7 +67,6 @@ const Perfil = ({ navigation }) => {
     }
   };
 
-  // Função para salvar o novo contato de emergência
   const salvarContatoEmergencia = () => {
     if (novoContatoNome.trim() === '' || novoContatoTelefone.trim() === '') {
       console.log(contatosEmergencia);
@@ -81,7 +82,6 @@ const Perfil = ({ navigation }) => {
     // setShowSaveButton(true);
   };
 
-  // Função para deletar um contato de emergência com restrição de um contato mínimo
   const deletarContatoEmergencia = (index) => {
     if (contatosEmergencia.length === 0 && index === 0) {
       Alert.alert('Aviso', 'Você precisa ter pelo menos um contato de emergência salvo.');
@@ -110,30 +110,59 @@ const Perfil = ({ navigation }) => {
     }
   };
 
-  // Função para monitorar as alterações dos campos e ativar o botão "Salvar"
   const handleFieldChange = (value, fieldSetter) => {
     fieldSetter(value);
     setShowSaveButton(true);
   };
 
-  // Função para salvar as alterações dos campos do perfil
-  const salvarAlteracoes = () => {
-    setEditNome(false);
-    setEditNomeEmergencia(false);
-    setEditTelefoneEmergencia(false);
-    setShowSaveButton(false);
-    setEditEmail(false);
-    Alert.alert('Sucesso', 'Alterações salvas com sucesso!');
+  const salvarAlteracoes = async () => {
+
+    try {
+      const infoUsuario = await getData();
+      const idUsuario = infoUsuario.idUsuario;
+  
+      if (idUsuario) {
+        const url = `http://192.168.15.117:8080/usuarios/atualizar/${idUsuario}`;
+  
+        const dadosUsuario = {
+          nomeCompleto: nome,
+          email: email,
+          senha: senha,
+          contatoEmergencia: telefoneEmergencia
+        }
+    
+        console.log(dadosUsuario);
+
+        const response = await axios.put(url, dadosUsuario);
+        console.log('Dados atualizados com sucesso!', response.data);
+
+        fetchUsuario();
+  
+        setEditNome(false);
+        setEditNomeEmergencia(false);
+        setEditTelefoneEmergencia(false);
+        setShowSaveButton(false);
+        setEditEmail(false);
+
+        Alert.alert('Sucesso', 'Alterações salvas com sucesso!');
+
+      } else {
+        console.log('Usuário não encontrado!');
+      }
+
+      
+    } catch (e) {
+      console.log('Erro ao ler informacoes do usuario:', e); 
+    }
+
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Ícone de perfil */}
       <Ionicons name="person-outline" size={100} color="#8DBF4D" style={styles.profileIcon} />
 
       <Text style={styles.sectionTitle}>Informações do Perfil</Text>
 
-      {/* Campo Nome */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -147,7 +176,6 @@ const Perfil = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Campo Email */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -161,13 +189,13 @@ const Perfil = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Campo Senha */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={senha}
           placeholder="Senha"
-          editable={false} // Não é editável diretamente
+          secureTextEntry={true}
+          editable={false} 
         />
         <TouchableOpacity onPress={() => navigation.navigate('TrocaSenha')}>
           <MaterialIcons name="edit" size={24} color="#8DBF4D" />
@@ -176,7 +204,6 @@ const Perfil = ({ navigation }) => {
 
       <Text style={styles.sectionTitle}>Contato de Emergência</Text>
 
-      {/* Primeiro contato de emergência */}
       <View>
         <View style={styles.inputContainer}>
           <TextInput
@@ -208,7 +235,6 @@ const Perfil = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Renderizar contatos adicionais */}
       {contatosEmergencia.map((contato, index) => (
         <View key={index + 1}>
           <View style={styles.inputContainer}>
@@ -254,12 +280,10 @@ const Perfil = ({ navigation }) => {
         </View>
       ))}
 
-      {/* Botão de adicionar novo contato */}
       <TouchableOpacity onPress={adicionarContatoEmergencia} style={styles.addButton}>
         <Text style={styles.addButtonText}>Adicionar Novo Contato de Emergência</Text>
       </TouchableOpacity>
 
-      {/* Modal para adicionar novo contato */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -289,7 +313,6 @@ const Perfil = ({ navigation }) => {
         </View>
       </Modal>
 
-      {/* Botão de salvar alterações gerais */}
       {showSaveButton && (
         <TouchableOpacity onPress={salvarAlteracoes} style={styles.saveButton}>
           <Text style={styles.saveButtonText}>Salvar Alterações</Text>

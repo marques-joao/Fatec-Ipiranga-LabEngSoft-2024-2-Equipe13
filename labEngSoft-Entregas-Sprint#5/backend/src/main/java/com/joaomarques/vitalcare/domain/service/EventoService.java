@@ -6,6 +6,7 @@ import com.joaomarques.vitalcare.domain.repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -52,6 +53,15 @@ public class EventoService {
     public List<EventoEntity> listarEventosPorUsuario(Long idUsuario) {
         try {
             return eventoRepository.findByUsuarioEntityIdUsuario(idUsuario);
+        } catch(Exception e) {
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<EventoEntity> listarEventosPorData(LocalDate data) {
+        try {
+            return eventoRepository.findByData(data);
         } catch(Exception e) {
             System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return null;

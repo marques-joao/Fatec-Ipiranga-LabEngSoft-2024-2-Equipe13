@@ -1,5 +1,6 @@
 package com.joaomarques.vitalcare.controller;
 
+import com.joaomarques.vitalcare.domain.entity.UsuarioEntity;
 import com.joaomarques.vitalcare.domain.service.UsuarioService;
 import com.joaomarques.vitalcare.dto.request.LoginRequestDTO;
 import com.joaomarques.vitalcare.dto.request.RegisterRequestDTO;
@@ -29,6 +30,23 @@ public class UsuarioController {
         }
     }
 
+    @PutMapping("/atualizar/{idUsuario}")
+    public ResponseEntity<?> atualizarUsuario(@PathVariable Long idUsuario, @RequestBody RegisterRequestDTO registerRequestDTO) {
+        UsuarioEntity usuario = usuarioService.buscarPorId(idUsuario);
+
+        if (usuario != null) {
+            RegisterResponseDTO response = usuarioService.atualizarCadastro(registerRequestDTO, idUsuario);
+
+            if ("SUCCESS".equals(response.getStatus())) {
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+    }
+
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> realizarLogin(@RequestBody LoginRequestDTO loginRequestDTO) {
         try {
@@ -48,6 +66,11 @@ public class UsuarioController {
     @PostMapping("/{idUsuario}/sos")
     public ChamadaSOSResponseDTO acionarSOS(@PathVariable Long idUsuario) {
         return usuarioService.acionarSOS(idUsuario);
+    }
+
+    @GetMapping("/{idUsuario}")
+    public UsuarioEntity buscarPorId(@PathVariable Long idUsuario) {
+        return usuarioService.buscarPorId(idUsuario);
     }
 
     @DeleteMapping("/{idUsuario}")

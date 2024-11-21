@@ -49,18 +49,40 @@ public class UsuarioService {
 
             return new RegisterResponseDTO("FAILED", "E-mail já cadastrado", null);
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return null;
         }
 
     }
 
+    public RegisterResponseDTO atualizarCadastro(RegisterRequestDTO registerRequestDTO, Long idUsuario) {
+        try {
+            Optional<UsuarioEntity> usuarioEntityOptional = this.usuarioRepository.findById(
+                    idUsuario
+            );
+
+            if (usuarioEntityOptional.isPresent()) {
+                UsuarioEntity usuarioEntity = usuarioEntityOptional.get();
+
+                usuarioEntity.setNome(registerRequestDTO.getNomeCompleto());
+                usuarioEntity.setSenha(registerRequestDTO.getSenha());
+                usuarioEntity.setEmail(registerRequestDTO.getEmail());
+                usuarioEntity.setContatoEmergencia(registerRequestDTO.getContatoEmergencia());
+
+                this.usuarioRepository.save(usuarioEntity);
+
+                return new RegisterResponseDTO("SUCCESS", "Cadastro atualizado com sucesso", usuarioEntity);
+            }
+
+            return new RegisterResponseDTO("FAILED", "Usuário não encontrado", null);
+        } catch (Exception e) {
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            return null;
+        }
+    }
+
     public LoginResponseDTO realizarLogin(LoginRequestDTO loginRequestDTO) {
         try {
-//            UsuarioEntity usuarioEntity = this.usuarioRepository.findByEmail(
-//                    loginRequestDTO.getEmail()).orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + loginRequestDTO.getEmail())
-//            );
-
             Optional<UsuarioEntity> usuarioEntityOpt = this.usuarioRepository.findByEmail(loginRequestDTO.getEmail());
 
             if (usuarioEntityOpt.isEmpty()) {
@@ -82,7 +104,7 @@ public class UsuarioService {
                 return new LoginResponseDTO("FAILED", "Senha incorreta", null);
             }
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return null;
         }
     }
@@ -116,7 +138,7 @@ public class UsuarioService {
                 chamadaSOSEntity.getUsuarioEntity().getIdUsuario()
             );
         } catch(Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
             return null;
         }
     }
@@ -129,7 +151,7 @@ public class UsuarioService {
         try {
             usuarioRepository.deleteById(idUsuario);
         }catch (Exception e) {
-            System.out.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
         }
     }
 

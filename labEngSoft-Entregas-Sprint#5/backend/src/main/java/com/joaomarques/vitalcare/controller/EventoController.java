@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -43,7 +44,7 @@ public class EventoController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<?> listarTodosEventos() {
         try {
             List<EventoEntity> eventos = eventoService.listarTodosEventos();
@@ -68,6 +69,18 @@ public class EventoController {
                 return ResponseEntity.status(HttpStatus.OK).body("Não há eventos para esse usuário.");
             }
 
+            return ResponseEntity.ok(eventos);
+        } catch(Exception e) {
+            System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> listarEventosPorData(@RequestParam("date") String date) {
+        try {
+            LocalDate localDate = LocalDate.parse(date);
+            List<EventoEntity> eventos = eventoService.listarEventosPorData(localDate);
             return ResponseEntity.ok(eventos);
         } catch(Exception e) {
             System.err.println(">>>>>>>>>>> Deu ruim: " + e.getMessage());
