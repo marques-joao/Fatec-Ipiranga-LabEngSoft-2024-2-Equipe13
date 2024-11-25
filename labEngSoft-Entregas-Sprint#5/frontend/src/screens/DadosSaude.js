@@ -20,12 +20,17 @@ const DadosSaude = ({ navigation }) => {
   const [doencas, setDoencas] = useState([]);
   const [oxigenacao, setOxigenacao] = useState('');
   const [batimento, setBatimento] = useState('');
-  // const [acionamentoSOS, setAcionamentoSOS] = useState({
-  //   data: '07/10/2024',
-  //   motivo: 'Queda de pressão'
-  // });
+  const [acionamentoSOS, setAcionamentoSOS] = useState('');
+  const [dataAcionamentoSOS, setDataAcionamentoSOS] = useState('');
   const [ist, setIst] = useState([]);
   const [medicamentos, setMedicamentos] = useState('');
+
+  const [editAlergias, setEditAlergias] = useState(false);
+  const [editDoencas, setEditDoencas] = useState(false);
+  const [editOxigenacao, setEditOxigenacao] = useState(false);
+  const [editBatimento, setEditBatimento] = useState(false);
+  const [editIst, setEditIst] = useState(false);
+  const [editMedicamentos, setEditMedicamentos] = useState(false);
 
   const opcoesTipoSanguineo = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-'];
   const opcoesAlergias = [
@@ -45,6 +50,11 @@ const DadosSaude = ({ navigation }) => {
     'Sífilis', 'Infecção pelo HTLV', 'Tricomoníase', 'Soropositivo', 'Não possuo IST'
   ];
 
+  const opcoesMotivo = [
+    'Queda', 'AVC', 'Dores Fortes no Peito', 'Ataque Cardíaco', 'Manifestação de Doença Crônica',
+    'Manifestação de Alergia', 'Acidente Doméstico', 'Dificuldade para Respirar', 'Confusão Mental'
+  ];
+
   const addSelection = (selectedOptions, setSelectedOptions, option) => {
     if (!selectedOptions.includes(option)) {
       setSelectedOptions([...selectedOptions, option]);
@@ -57,8 +67,8 @@ const DadosSaude = ({ navigation }) => {
       const idUsuario = infoUsuario.idUsuario;
 
       if (idUsuario) {
-        const url = `http://192.168.15.117:8080/saude/${idUsuario}`;
-        // const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/saude/${idUsuario}`;
+        // const url = `http://192.168.15.117:8080/saude/${idUsuario}`;
+        const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/saude/${idUsuario}`;
 
         const listaMedicamentos = medicamentos.split(',').map(med => med.trim());
 
@@ -92,7 +102,8 @@ const DadosSaude = ({ navigation }) => {
   
         if (infoUsuario && infoUsuario.idUsuario) {
           const idUsuario = infoUsuario.idUsuario;
-          const url = `http://192.168.15.117:8080/saude/usuarios/${idUsuario}`;
+          // const url = `http://192.168.15.117:8080/saude/usuarios/${idUsuario}`;
+          const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/saude/usuarios/${idUsuario}`;
           
           const response = await axios.get(url);
           
@@ -155,11 +166,17 @@ const DadosSaude = ({ navigation }) => {
             ))}
           </Picker>
         </View>
-        <StyledTextInput
-          multiline={true}
-          value={alergias.join(', ')}
-          editable={false}
-        />
+        <View style={styles.inputContainer}>
+          <StyledTextInput style={styles.inputChild}
+            multiline={true}
+            value={alergias.join(', ')}
+            editable={editAlergias}
+            onChangeText={(value) => setAlergias(value.split(',').map((item) => item.trim()))}
+          />
+          <TouchableOpacity style={styles.inputChild} onPress={() => setEditAlergias(!editAlergias)}>
+            <MaterialIcons name="edit" size={24} color="#8DBF4D" />
+          </TouchableOpacity>
+        </View>
 
         <StyledInputLabel style={styles.questionText}>Histórico de Doença</StyledInputLabel>
         <View style={styles.pickerContainer}>
@@ -175,29 +192,47 @@ const DadosSaude = ({ navigation }) => {
             ))}
           </Picker>
         </View>
-        <StyledTextInput
-          multiline={true}
-          value={doencas.join(', ')}
-          editable={false}
-        />
+        <View style={styles.inputContainer}>
+          <StyledTextInput style={styles.inputChild}
+            multiline={true}
+            value={doencas.join(', ')}
+            editable={editDoencas}
+            onChangeText={(value) => setDoencas(value.split(',').map((item) => item.trim()))}
+          />
+          <TouchableOpacity style={styles.inputChild} onPress={() => setEditDoencas(!editDoencas)}>
+            <MaterialIcons name="edit" size={24} color="#8DBF4D" />
+          </TouchableOpacity>
+        </View>
 
         <StyledInputLabel style={styles.questionText}>Oxigenação Sanguínea (%)</StyledInputLabel>
-        <TextInput
-          placeholder="Digite a oxigenação sanguínea"
-          keyboardType="numeric"
-          value={oxigenacao}
-          onChangeText={(text) => setOxigenacao(text.slice(0, 3))}
-          style={styles.textInput}
-        />
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Digite a oxigenação sanguínea"
+            keyboardType="numeric"
+            value={oxigenacao}
+            onChangeText={(text) => setOxigenacao(text.slice(0, 3))}
+            style={[styles.textInput, styles.inputChild]}
+            editable={editOxigenacao}
+          />
+          <TouchableOpacity style={styles.inputChild} onPress={() => setEditOxigenacao(!editOxigenacao)}>
+            <MaterialIcons name="edit" size={24} color="#8DBF4D" />
+          </TouchableOpacity>
+        </View>
 
         <StyledInputLabel style={styles.questionText}>Batimento Cardíaco (BPM)</StyledInputLabel>
-        <TextInput
-          placeholder="Digite o batimento cardíaco"
-          keyboardType="numeric"
-          value={batimento}
-          onChangeText={(text) => setBatimento(text.slice(0, 3))}
-          style={styles.textInput}
-        />
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Digite o batimento cardíaco"
+            keyboardType="numeric"
+            value={batimento}
+            onChangeText={(text) => setBatimento(text.slice(0, 3))}
+            style={[styles.textInput, styles.inputChild]}
+            editable={editBatimento}
+          />
+          <TouchableOpacity style={styles.inputChild} onPress={() => setEditBatimento(!editBatimento)}>
+            <MaterialIcons name="edit" size={24} color="#8DBF4D" />
+          </TouchableOpacity>
+        </View>
 
         <StyledInputLabel style={styles.questionText}>IST</StyledInputLabel>
         <View style={styles.pickerContainer}>
@@ -213,25 +248,50 @@ const DadosSaude = ({ navigation }) => {
             ))}
           </Picker>
         </View>
-        <StyledTextInput
-          multiline={true}
-          value={ist.join(', ')}
-          editable={false}
+        <View style={styles.inputContainer}>
+          <StyledTextInput style={styles.inputChild}
+            multiline={true}
+            value={ist.join(', ')}
+            editable={editIst}
+            onChangeText={(value) => setIst(value.split(',').map((item) => item.trim()))}
           />
+          <TouchableOpacity style={styles.inputChild} onPress={() => setEditIst(!editIst)}>
+            <MaterialIcons name="edit" size={24} color="#8DBF4D" />
+          </TouchableOpacity>
+        </View>
 
         <StyledInputLabel style={styles.questionText}>Medicamentos Tomados</StyledInputLabel>
-        <StyledTextInput
-          placeholder="Digite os medicamentos e dosagens separados por vírgula"
-          multiline={true}
-          value={medicamentos}
-          onChangeText={setMedicamentos}
-        />
+        <View style={styles.inputContainer}>
+          <StyledTextInput style={styles.inputChild}
+            placeholder="Digite os medicamentos e dosagens separados por vírgula"
+            multiline={true}
+            value={medicamentos}
+            onChangeText={setMedicamentos}
+            editable={editMedicamentos}
+          />
+          <TouchableOpacity style={styles.inputChild} onPress={() => setEditMedicamentos(!editMedicamentos)}>
+            <MaterialIcons name="edit" size={24} color="#8DBF4D" />
+          </TouchableOpacity>
+        </View>
 
-          {/* <StyledInputLabel style={[styles.questionText, styles.highlightedSection]}>Acionamento do SOS</StyledInputLabel>
-          <Text style={styles.sosText}>Último acionamento: {acionamentoSOS.data}</Text>
-          <Text style={styles.sosText}>Motivo: {acionamentoSOS.motivo}</Text>
-  
-          <View style={styles.extraSpace} /> */}
+        <StyledInputLabel style={styles.questionText}>Acionamento do SOS</StyledInputLabel>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={acionamentoSOS}
+            onValueChange={(itemValue) => setAcionamentoSOS(itemValue)}
+            style={styles.picker}
+            dropdownIconColor="white"
+          >
+          <Picker.Item label="Clique aqui para selecionar" value="" style={styles.pickerItem} />
+            {opcoesMotivo.map((motivo, index) => (
+              <Picker.Item key={index} label={motivo} value={motivo} />
+            ))}
+          </Picker>
+        </View>
+        <Text style={styles.sosText}>Último acionamento: {dataAcionamentoSOS}</Text>
+        <Text style={styles.sosText}>Motivo: {acionamentoSOS}</Text>
+        
+          <View style={styles.extraSpace} />
 
         <Line />
 
@@ -250,6 +310,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center'
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputChild: {
+    marginHorizontal: 4,
+    width: '90%'
   },
   image: {
     width: '60%',

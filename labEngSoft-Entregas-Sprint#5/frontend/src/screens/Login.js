@@ -55,8 +55,8 @@ const Login = ({ navigation }) => {
     const handleLogin = (credentials, setSubmitting) => {
         handleMessage(null);
 
-        const url = 'http://192.168.15.117:8080/usuarios/login';
-        // const url = 'https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/login';
+        // const url = 'http://192.168.15.117:8080/usuarios/login';
+        const url = 'https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/login';
 
         axios
         .post(url, credentials)

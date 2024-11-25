@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "frontend",
+    "name": "VitalCare",
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-vitalcare.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash-screen.png",
@@ -20,10 +20,16 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "newArchEnabled": true
+      "newArchEnabled": true,
+      "package": "com.joaomarquesp.vitalcare"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6ae26a08-bbb5-4d29-b7ce-eaa90a6db1f3"
+      }
     }
   }
 }

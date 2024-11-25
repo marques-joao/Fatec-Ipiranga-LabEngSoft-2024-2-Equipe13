@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Switch, Share } from 'react-native';
-import { LineChart, BarChart, PieChart } from 'react-native-svg-charts';
+import { View, Text, screenWidth, Image, ScrollView, TouchableOpacity, Switch, Share, Dimensions } from 'react-native';
+import { BarChart, PieChart } from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import { Circle, G, Text as SVGText, Rect } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import styles from './../components/RelatoriosStyles';
+
 
 const Relatorios = () => {
   const [periodo, setPeriodo] = useState('Dia');
   const [isPieChartMedication, setIsPieChartMedication] = useState(false);
   const [isPieChartSOS, setIsPieChartSOS] = useState(false);
+  const screenWidth = Dimensions.get('window').width;
 
   // Função para compartilhar relatório
   const shareReport = async () => {
@@ -19,36 +22,129 @@ const Relatorios = () => {
     } catch (error) {
       console.error('Erro ao tentar compartilhar:', error);
     }
-  }
+  };
 
+  // Obtém dados estáticos para gráficos com base no período e tipo
   const getDataByPeriod = (type) => {
     const data = {
       Dia: {
         heartRate: [
-          { quantidade: 50, svg: { fill: '#FFB444' } },
-          { quantidade: 56, svg: { fill: '#FFB444' } },
-          { quantidade: 98, svg: { fill: '#FFB444' } },
-          { quantidade: 69, svg: { fill: '#FFB444' } },
+          { quantidade: 75, svg: { fill: '#FFB444' } },
         ],
         oxygenation: [
           { quantidade: 95, svg: { fill: '#C8A2C8' } },
-          { quantidade: 82, svg: { fill: '#C8A2C8' } },
-          { quantidade: 98, svg: { fill: '#C8A2C8' } },
-          { quantidade: 88, svg: { fill: '#C8A2C8' } },
         ],
         sos: [
-          { motivo: 'Queda', quantidade: 15, svg: { fill: '#FF6384' } },
-          { motivo: 'Dor Forte', quantidade: 28, svg: { fill: '#FFCE56' } },
-          { motivo: 'Dificuldade Respiratória', quantidade: 30, svg: { fill: '#75BFFF' } },
+          { motivo: 'Queda', quantidade: 1, svg: { fill: '#FF6384' } },
         ],
         medication: [
-          { label: 'Tomou', quantidade: 30, svg: { fill: '#ABDBB0' } },
-          { label: 'Não Tomou', quantidade: 15, svg: { fill: '#C98181' } },
+          { label: 'Tomou', quantidade: 5, svg: { fill: '#ABDBB0' } },
+          { label: 'Não Tomou', quantidade: 1, svg: { fill: '#C98181' } },
+        ],
+      },
+      Semana: {
+        // Mock: Adicione dados para Semana
+        heartRate: [
+          { quantidade: 65, svg: { fill: '#FFB444' } },
+          { quantidade: 58, svg: { fill: '#FFB444' } },
+          { quantidade: 56, svg: { fill: '#FFB444' } },
+          { quantidade: 60, svg: { fill: '#FFB444' } },
+          { quantidade: 65, svg: { fill: '#FFB444' } },
+          { quantidade: 56, svg: { fill: '#FFB444' } },
+          { quantidade: 70, svg: { fill: '#FFB444' } },
+        ],
+        oxygenation: [
+          { quantidade: 95, svg: { fill: '#C8A2C8' } },
+          { quantidade: 100, svg: { fill: '#C8A2C8' } },
+          { quantidade: 98, svg: { fill: '#C8A2C8' } },
+          { quantidade: 96, svg: { fill: '#C8A2C8' } },
+          { quantidade: 95, svg: { fill: '#C8A2C8' } },
+          { quantidade: 95, svg: { fill: '#C8A2C8' } },
+          { quantidade: 86, svg: { fill: '#C8A2C8' } },
+        ],
+        sos: [
+          { motivo: 'Queda', quantidade: 2, svg: { fill: '#FF6384' } },
+          { motivo: 'Manifestação de Alergia', quantidade: 6, svg: { fill: '#FFCE56' } },
+          { motivo: 'Dificuldade para Respirar', quantidade: 4, svg: { fill: '#75BFFF' } },
+        ],
+        medication: [
+          { label: 'Tomou', quantidade: 25, svg: { fill: '#ABDBB0' } },
+          { label: 'Não Tomou', quantidade: 10, svg: { fill: '#C98181' } },
+        ],
+      },
+      Mês: {
+        // Mock: Adicione dados para Mês
+        heartRate: [
+          { quantidade: 85, svg: { fill: '#FFB444' } },
+        ],
+        oxygenation: [
+          { quantidade: 75, svg: { fill: '#C8A2C8' } },
+        ],
+        sos: [
+          { motivo: 'Queda', quantidade: 6, svg: { fill: '#FF6384' } },
+          { motivo: 'Manifestação de Alergia', quantidade: 12, svg: { fill: '#FFCE56' } },
+          { motivo: 'Dificuldade para Respirar', quantidade: 9, svg: { fill: '#75BFFF' } },
+          { motivo: 'AVC', quantidade: 1, svg: { fill: '#C8A2C8' } },
+          { motivo: 'Acidente Doméstico', quantidade: 3, svg: { fill: '#FFB444' } },
+        ],
+        medication: [
+          { label: 'Tomou', quantidade: 65, svg: { fill: '#ABDBB0' } },
+          { label: 'Não Tomou', quantidade: 24, svg: { fill: '#C98181' } },
         ],
       },
     };
-    return data[periodo][type];
+
+    // Retorna os dados do período ou vazio se o período não estiver definido
+    return data[periodo]?.[type] || [];
   };
+
+  // Gera as datas conforme o período selecionado
+  const getDatesByPeriod = () => {
+    const today = new Date();
+    if (periodo === 'Dia') {
+      return [today.toLocaleDateString('pt-BR')]; // Retorna apenas o dia atual
+    } else if (periodo === 'Semana') {
+      const weekDays = [];
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        weekDays.push(date.toLocaleDateString('pt-BR').slice(0, 5)); // Formato "dd/MM"
+      }
+      return weekDays;
+    } else if (periodo === 'Mês') {
+      const today = new Date();
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const currentMonth = monthNames[today.getMonth()];
+      return [currentMonth]; // Retorna um array com o mês atual
+    }
+  };
+
+  const renderBarValues = (data, chartWidth, chartHeight = 200, contentInset = { top: 30, bottom: 10 }) => {
+    const barWidth = chartWidth / data.length; // Calcula a largura de cada coluna
+  
+    return data.map((item, index) => {
+      const x = barWidth * index + barWidth / 2; // Calcula o centro de cada coluna
+      const y = chartHeight - contentInset.bottom - item.quantidade; // Ajusta a posição vertical
+      
+  
+      return (
+        <G key={index}>
+          <SVGText
+            x={x * 76 / 83 }
+            y={180 / y + 60} // Coloca o texto acima da barra
+            fontSize={14}
+            fontWeight="bold"
+            fill="black"
+            textAnchor="middle"
+          >
+            {item.quantidade}
+          </SVGText>
+        </G>
+      );
+    });
+  };
+  
+  const data = getDataByPeriod(periodo);
 
   const PieChartLabels = ({ slices }) =>
     slices.map((slice, index) => {
@@ -83,6 +179,7 @@ const Relatorios = () => {
   );
 
   return (
+
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image source={require('../assets/Relatorio.png')} style={styles.image} />
@@ -113,26 +210,20 @@ const Relatorios = () => {
                 contentInset={{ top: 30, bottom: 10 }}
                 spacingInner={0.2}
                 gridMin={0}
-                gridMax = {115}
+                gridMax = {130}
             >
-                {getDataByPeriod('oxygenation').map((item, index) => (
-                        <G key={index}>
-                        <SVGText
-                            key={index}
-                            x={index * 100 + 40}
-                            y={180 - item.quantidade - 40} // Ajusta posição acima da coluna
-                            fontSize={16}
-                            fontWeight="bold"
-                            fill="#333"
-                            alignmentBaseline="middle"
-                            textAnchor="middle"
-                            >
-                            {item.quantidade}%
-                        </SVGText>
-                        </G>
-                    ))}
-                
+
+              {renderBarValues(getDataByPeriod('oxygenation'), screenWidth)}
             </BarChart>
+
+            {/* Exibe as datas abaixo do gráfico */}
+            <View style={styles.datesContainer}>
+                  {getDatesByPeriod().map((date, index) => (
+                  <Text key={index} style={styles.dateText}>
+                    {date}
+                  </Text>
+                  ))}
+                </View>
             <Text style={styles.description}>
                 Os valores de saturação de oxigênio normais para idosos são de 95% à 100%. Em caso de doenças crônicas, os valores considerados normais são de 88% à 95%.
             </Text>
@@ -166,7 +257,7 @@ const Relatorios = () => {
             contentInset={{ top: 30, bottom: 10 }}
             spacingInner={0.2}
             gridMin={0}
-            gridMax = {100}
+            gridMax = {120}
           >
             {getDataByPeriod('medication').map((item, index) => (
               <G key={index}>
@@ -174,7 +265,7 @@ const Relatorios = () => {
                  key={index}
                  x={ index * 210 + 90}
                  y={180 - item.quantidade - 20} // Ajusta posição acima da coluna
-                 fontSize={16}
+                 fontSize={14}
                  fontWeight="bold"
                  fill="#333"
                  alignmentBaseline="middle"
@@ -186,13 +277,14 @@ const Relatorios = () => {
             ))}
           </BarChart>
         )}
+
         {renderLegend(getDataByPeriod('medication'), 'medication')}
       </View>
 
       {/* Batimento Cardíaco */}
       <View style={styles.chartContainer}>
         <View style={styles.chartHeader}>
-        <Text style={styles.chartTitle}>Batimento Cardíaco</Text>
+        <Text style={styles.chartTitle}>Batimento Cardíaco (bpm)</Text>
         </View>
             <BarChart
                 style={styles.graph}
@@ -202,26 +294,21 @@ const Relatorios = () => {
                 contentInset={{ top: 30, bottom: 10 }}
                 spacingInner={0.2}
                 gridMin={0}
-                gridMax = {130}
+                gridMax = {100}
             >
-                {getDataByPeriod('heartRate').map((item, index) => (
-                        <G key={index}>
-                        <SVGText
-                            key={index}
-                            x={index * 100 + 30}
-                            y={180 - item.quantidade - 30} // Ajusta posição acima da coluna
-                            fontSize={16}
-                            fontWeight="bold"
-                            fill="#333"
-                            alignmentBaseline="middle"
-                            textAnchor="middle"
-                            >
-                            {item.quantidade}    bpm
-                        </SVGText>
-                        </G>
-                    ))}
+                {renderBarValues(getDataByPeriod('heartRate'), screenWidth)}
                 
             </BarChart>
+
+             {/* Exibe as datas abaixo do gráfico */}
+             <View style={styles.datesContainer}>
+                  {getDatesByPeriod().map((date, index) => (
+                  <Text key={index} style={styles.dateText}>
+                    {date}
+                  </Text>
+                  ))}
+                </View>
+
             <Text style={styles.description}>
                 A frequência cardíaca normal para idosos em repouso varia entre 50bpm e 60bpm.
             </Text>
@@ -255,52 +342,17 @@ const Relatorios = () => {
             contentInset={{ top: 30, bottom: 10 }}
             spacingInner={0.2}
             gridMin={0}
-            gridMax = {100}
+            gridMax = {16}
           >
-            {getDataByPeriod('sos').map((item, index) => (
-              <G key={index}>
-                <SVGText
-                   x={60 + index * 135}
-                   y={180 - item.quantidade - 20} // Ajusta posição acima da coluna
-                   fontSize={16}
-                   fontWeight="bold"
-                   fill="#333"
-                   alignmentBaseline="middle"
-                   textAnchor="middle"
-                >
-                  {item.quantidade}
-                </SVGText>
-              </G>
-            ))}
+            {renderBarValues(getDataByPeriod('sos'), screenWidth)}
           </BarChart>
         )}
+
         {renderLegend(getDataByPeriod('sos'), 'sos')}
+        
       </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 20 },
-  header: { alignItems: 'center', marginBottom: 20 },
-  image: { width: 140, height: 140, resizeMode: 'contain', marginTop: 60 },
-  title: { fontSize: 45, fontWeight: 'bold', color: '#8DBF4D', marginTop: 10, textAlign: 'center' },
-  periodSelector: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 },
-  periodButton: { padding: 10, backgroundColor: '#8DBF4D', borderRadius: 5, marginBottom: 20},
-  periodButtonText: { color: '#fff', fontWeight: 'bold' },
-  shareButton: { padding: 10, backgroundColor: '#fff', borderRadius: 5, justifyContent: 'center', alignItems: 'center' },
-  chartContainer: { marginBottom: 30 },
-  chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  chartTitle: { fontSize: 18, fontWeight: 'bold' },
-  graph: {
-    height: 200,  // Ajuste a altura conforme necessário
-    width: '100%',  // Ou defina uma largura fixa, se preferir
-  },
-  chart: { height: 200, marginBottom: 10 },
-  legendContainer: { flexDirection: 'row', marginTop: 10, marginLeft: 5 },
-  legendItem: { flexDirection: 'row', alignItems: 'center', marginRight: 10 },
-  legendColor: { width: 16, height: 16, marginRight: 5 },
-  legendText: { fontSize: 14, color: '#333', marginRight: 5 },
-});
 
 export default Relatorios;

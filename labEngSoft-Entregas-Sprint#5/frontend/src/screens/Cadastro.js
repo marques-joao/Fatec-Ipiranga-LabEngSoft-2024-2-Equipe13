@@ -64,8 +64,8 @@ const Cadastro = ({ navigation }) => {
     const handleRegister = (credentials, setSubmitting) => {
         handleMessage(null);
 
-        const url = 'http://192.168.15.117:8080/usuarios/cadastro';
-        // const url = 'https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/cadastro';
+        // const url = 'http://192.168.15.117:8080/usuarios/cadastro';
+        const url = 'https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/cadastro';
 
         axios
             .post(url, credentials)

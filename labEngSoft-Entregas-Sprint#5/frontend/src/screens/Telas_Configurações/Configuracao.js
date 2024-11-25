@@ -1,19 +1,17 @@
 //import React from 'react';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Modal } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-const Configuracao = () => {
-  const navigation = useNavigation();
+const Configuracao = ({ navigation }) => {
   const { width, height } = Dimensions.get('window');
 
-const [accessibilityModalVisible, setAccessibilityModalVisible] = useState(false);
+// const [accessibilityModalVisible, setAccessibilityModalVisible] = useState(false);
 
   // Função para abrir o modal de acessibilidade
-  const handleAccessibilityPress = () => {
-    setAccessibilityModalVisible(true);
-  };
+  // const handleAccessibilityPress = () => {
+  //   setAccessibilityModalVisible(true);
+  // };
   
   // Ajustar tamanhos de acordo com as dimensões da tela
   const titleFontSize = width * 0.09;
@@ -57,14 +55,14 @@ const [accessibilityModalVisible, setAccessibilityModalVisible] = useState(false
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.configButton, { width: width * 0.9 }]}
-            onPress={handleAccessibilityPress}
+            onPress={() => navigation.navigate('Acessibilidade')}
           >
             <Ionicons name="accessibility-outline" size={24} color="#fff" style={styles.icon} />
             <Text style={[styles.buttonText, { fontSize: buttonTextFontSize }]}>Acessibilidade</Text>
           </TouchableOpacity>
 
         {/* Modal de Recurso Indisponível para Acessibilidade */}
-      <Modal
+      {/* <Modal
         transparent={true}
         animationType="fade"
         visible={accessibilityModalVisible}
@@ -81,7 +79,7 @@ const [accessibilityModalVisible, setAccessibilityModalVisible] = useState(false
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   </ScrollView>
 </View>

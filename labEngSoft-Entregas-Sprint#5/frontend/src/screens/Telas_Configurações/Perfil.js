@@ -39,7 +39,8 @@ const Perfil = ({ navigation }) => {
       const idUsuario = infoUsuario.idUsuario;
 
       if (idUsuario) {
-        const url = `http://192.168.15.117:8080/usuarios/${idUsuario}`;
+        // const url = `http://192.168.15.117:8080/usuarios/${idUsuario}`;
+        const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/${idUsuario}`;
         const response = await axios.get(url)
         
         const dadosUsuario = response.data;
@@ -123,7 +124,8 @@ const Perfil = ({ navigation }) => {
       const idUsuario = infoUsuario.idUsuario;
   
       if (idUsuario) {
-        const url = `http://192.168.15.117:8080/usuarios/atualizar/${idUsuario}`;
+        // const url = `http://192.168.15.117:8080/usuarios/atualizar/${idUsuario}`;
+        const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/atualizar/${idUsuario}`;
   
         const dadosUsuario = {
           nomeCompleto: nome,
@@ -132,8 +134,6 @@ const Perfil = ({ navigation }) => {
           contatoEmergencia: telefoneEmergencia,
           nomeContatoEmergencia: nomeEmergencia
         }
-    
-        console.log(dadosUsuario);
 
         const response = await axios.put(url, dadosUsuario);
         console.log('Dados atualizados com sucesso!', response.data);

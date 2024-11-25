@@ -23,7 +23,8 @@ const InfoSaude = () => {
   
         if (infoUsuario && infoUsuario.idUsuario) {
           const idUsuario = infoUsuario.idUsuario;
-          const url = `http://192.168.15.117:8080/saude/usuarios/${idUsuario}`;
+          // const url = `http://192.168.15.117:8080/saude/usuarios/${idUsuario}`;
+          const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/saude/usuarios/${idUsuario}`;
           
           const response = await axios.get(url);
           
