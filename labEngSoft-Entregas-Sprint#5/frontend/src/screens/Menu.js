@@ -56,7 +56,7 @@ const Menu = ({ navigation }) => {
                 {renderMenuButton('Agenda', require('../assets/Agenda.png'), () => navigation.navigate('Agenda'))}
               </View>
               <View style={{ width: '50%', alignItems: 'center' }}>
-                {renderMenuButton('Relatórios', require('../assets/Relatorio.png'), () => navigation.navigate('Relatorios'))}
+                {renderMenuButton('Relatórios', require('../assets/Relatorio.png'), () => {})}
               </View>
               <View style={{ width: '50%', alignItems: 'center' }}>
                 {renderMenuButton('Dados de Saúde', require('../assets/DadosSaude.png'), () => navigation.navigate('DadosSaude'))}
