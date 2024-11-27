@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 import { getData } from '../utils/storageUtils';
-import { Modal, Text, View, TouchableOpacity } from 'react-native';
-import styled from 'styled-components';
-import Constants from 'expo-constants';
-//import { ModalContentStyledContainer, InfoThermsContainer } from './../components/styles';
+import { Modal, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 
 const PopUpSOS = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -23,7 +19,6 @@ const PopUpSOS = ({ navigation }) => {
         console.log(infoUsuario);
 
         if (idUsuario) {
-            // const url = `http://192.168.15.117:8080/usuarios/${idUsuario}/sos`;
             const url = `https://vitalcare-9331c2ed71f5.herokuapp.com/usuarios/${idUsuario}/sos`;
 
             const response = await axios.post(url);

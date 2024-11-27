@@ -89,7 +89,7 @@ const Agenda = () => {
 
   const saveEvent = useCallback(async () => {
     if (!eventDetails.nome || !selectedColor || !eventDetails.horario) {
-      alert("Por favor, preencha todos os campos");
+      Alert.alert("Aviso", "Por favor, preencha todos os campos obrigatórios (Nome, classificação e horário)");
       return;
     }
 

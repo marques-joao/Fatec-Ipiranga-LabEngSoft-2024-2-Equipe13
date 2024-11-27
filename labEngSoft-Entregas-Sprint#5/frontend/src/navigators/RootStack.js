@@ -16,6 +16,7 @@ import TrocaSenha from '../screens/Telas_Configurações/TrocaSenha';
 import SobreAplicativo from '../screens/Telas_Configurações/SobreAplicativo';
 import Conta from '../screens/Telas_Configurações/Conta';
 import Acessibilidade from '../screens/Telas_Configurações/Acessibilidade';
+import Relatorios from '../screens/Relatorios';
 
 import { Colors } from '../components/styles';
 
@@ -51,6 +52,7 @@ const RootStack = () => {
                 <Stack.Screen name='SobreAplicativo' component={SobreAplicativo} />
                 <Stack.Screen name='Conta' component={Conta} />
                 <Stack.Screen name='Acessibilidade' component={Acessibilidade} />
+                <Stack.Screen name='Relatorios' component={Relatorios} />
                 
             </Stack.Navigator>
         </NavigationContainer>

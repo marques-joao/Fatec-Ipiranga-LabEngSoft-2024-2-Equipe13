@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Text, View, Image, StyleSheet, TextInput } from 'react-native';
+import { ScrollView, Text, View, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import {
   StyledContainer,

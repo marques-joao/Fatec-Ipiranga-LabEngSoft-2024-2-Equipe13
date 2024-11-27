@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, screenWidth, Image, ScrollView, TouchableOpacity, Switch, Share, Dimensions } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, Switch, Share, Dimensions } from 'react-native';
 import { BarChart, PieChart } from 'react-native-svg-charts';
-import * as shape from 'd3-shape';
-import { Circle, G, Text as SVGText, Rect } from 'react-native-svg';
+import { G, Text as SVGText } from 'react-native-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './../components/RelatoriosStyles';
+import { StyledContainer } from '../components/styles';
+// import { captureRef } from 'react-native-view-shot';
 
 
 const Relatorios = () => {
@@ -13,11 +14,25 @@ const Relatorios = () => {
   const [isPieChartSOS, setIsPieChartSOS] = useState(false);
   const screenWidth = Dimensions.get('window').width;
 
+  // const chartOxigenacao = useRef();
+  // const chartMedicamentos = useRef();
+  // const chartBatimentos = useRef();
+  // const chartSOS = useRef();
+
   // Função para compartilhar relatório
   const shareReport = async () => {
     try {
+
+      // const imgOxigenacao = await captureRef(chartOxigenacao, { format: 'png', quality: 0.8 });
+      // const imgMedicamentos = await captureRef(chartMedicamentos, { format: 'png', quality: 0.8 });
+      // const imgBatimentos = await captureRef(chartBatimentos, { format: 'png', quality: 0.8 });
+      // const imgSOS = await captureRef(chartSOS, { format: 'png', quality: 0.8 });
+
+      const message = 'Aqui está o relatório do sistema, com os dados mais recentes.';
+
       await Share.share({
-        message: 'Aqui está o relatório do sistema, com os dados mais recentes.',
+        message,
+        // url: imgOxigenacao,
       });
     } catch (error) {
       console.error('Erro ao tentar compartilhar:', error);
@@ -113,7 +128,7 @@ const Relatorios = () => {
       return weekDays;
     } else if (periodo === 'Mês') {
       const today = new Date();
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
       const currentMonth = monthNames[today.getMonth()];
       return [currentMonth]; // Retorna um array com o mês atual
     }
@@ -130,8 +145,8 @@ const Relatorios = () => {
       return (
         <G key={index}>
           <SVGText
-            x={x * 76 / 83 }
-            y={180 / y + 60} // Coloca o texto acima da barra
+            x={x * 72 / 83 }
+            y={180 / y + 30} // Coloca o texto acima da barra
             fontSize={14}
             fontWeight="bold"
             fill="black"
@@ -144,7 +159,7 @@ const Relatorios = () => {
     });
   };
   
-  const data = getDataByPeriod(periodo);
+  // const data = getDataByPeriod(periodo);
 
   const PieChartLabels = ({ slices }) =>
     slices.map((slice, index) => {
@@ -180,178 +195,182 @@ const Relatorios = () => {
 
   return (
 
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Image source={require('../assets/Relatorio.png')} style={styles.image} />
-        <Text style={styles.title}>Relatórios</Text>
-      </View>
+    <StyledContainer>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Image source={require('../assets/Relatorio.png')} style={styles.image} />
+          <Text style={styles.title}>Relatórios</Text>
+        </View>
 
-      <View style={styles.periodSelector}>
-        {['Dia', 'Semana', 'Mês'].map((item) => (
-          <TouchableOpacity key={item} onPress={() => setPeriodo(item)} style={styles.periodButton}>
-            <Text style={styles.periodButtonText}>{item}</Text>
+        <View style={styles.periodSelector}>
+          {['Dia', 'Semana', 'Mês'].map((item) => (
+            <TouchableOpacity key={item} onPress={() => setPeriodo(item)} style={styles.periodButton}>
+              <Text style={styles.periodButtonText}>{item}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity style={styles.shareButton} onPress={shareReport}>
+            <Icon name="share-alt" size={28} color="#8DBF4D" marginBottom= '20'  />
           </TouchableOpacity>
-        ))}
-        <TouchableOpacity style={styles.shareButton} onPress={shareReport}>
-          <Icon name="share-alt" size={28} color="#8DBF4D" marginBottom= '20'  />
-        </TouchableOpacity>
-      </View>
-
-      {/* Oxigenação Sanguínea */}
-      <View style={styles.chartContainer}>
-        <View style={styles.chartHeader}>
-        <Text style={styles.chartTitle}>Oxigenação Sanguínea</Text>
         </View>
-            <BarChart
-                style={styles.graph}
-                data={getDataByPeriod('oxygenation')}
-                yAccessor={({ item }) => item.quantidade}
-                svg={{ fill: '#1e90ff' }}
-                contentInset={{ top: 30, bottom: 10 }}
-                spacingInner={0.2}
-                gridMin={0}
-                gridMax = {130}
-            >
 
-              {renderBarValues(getDataByPeriod('oxygenation'), screenWidth)}
-            </BarChart>
-
-            {/* Exibe as datas abaixo do gráfico */}
-            <View style={styles.datesContainer}>
-                  {getDatesByPeriod().map((date, index) => (
-                  <Text key={index} style={styles.dateText}>
-                    {date}
-                  </Text>
-                  ))}
-                </View>
-            <Text style={styles.description}>
-                Os valores de saturação de oxigênio normais para idosos são de 95% à 100%. Em caso de doenças crônicas, os valores considerados normais são de 88% à 95%.
-            </Text>
-      </View>     
-
-      {/*Adesão de Medicamentos */}
-      <View style={styles.chartContainer}>
-        <View style={styles.chartHeader}>
-          <Text style={styles.chartTitle}>Adesão de Medicamentos</Text>
-          <Switch
-            value={isPieChartMedication}
-            onValueChange={() => setIsPieChartMedication(!isPieChartMedication)}
-          />
-        </View>
-        {isPieChartMedication ? (
-          <PieChart
-            style={[styles.chart, { height: 240 }]}
-            data={getDataByPeriod('medication')}
-            valueAccessor={({ item }) => item.quantidade}
-            outerRadius="95%"
-            innerRadius="40%"
-          >
-            <PieChartLabels />
-          </PieChart>
-        ) : (
+        {/* Oxigenação Sanguínea */}
+        <View style={styles.chartContainer}>
+          <View style={styles.chartHeader}>
+            <Text style={styles.chartTitle}>Oxigenação Sanguínea (%)</Text>
+          </View>
           <BarChart
-            style={styles.chart}
-            data={getDataByPeriod('medication')}
-            yAccessor={({ item }) => item.quantidade}
-            svg={{ fill: '#1e90ff' }}
-            contentInset={{ top: 30, bottom: 10 }}
-            spacingInner={0.2}
-            gridMin={0}
-            gridMax = {120}
+              style={styles.graph}
+              data={getDataByPeriod('oxygenation')}
+              yAccessor={({ item }) => item.quantidade}
+              svg={{ fill: '#1e90ff' }}
+              contentInset={{ top: 30, bottom: 10 }}
+              spacingInner={0.2}
+              gridMin={0}
+              gridMax = {130}
           >
-            {getDataByPeriod('medication').map((item, index) => (
-              <G key={index}>
-                <SVGText
-                 key={index}
-                 x={ index * 210 + 90}
-                 y={180 - item.quantidade - 20} // Ajusta posição acima da coluna
-                 fontSize={14}
-                 fontWeight="bold"
-                 fill="#333"
-                 alignmentBaseline="middle"
-                 textAnchor="middle"
-                >
-                  {item.quantidade}
-                </SVGText>
-              </G>
-            ))}
+
+            {renderBarValues(getDataByPeriod('oxygenation'), screenWidth)}
           </BarChart>
-        )}
 
-        {renderLegend(getDataByPeriod('medication'), 'medication')}
-      </View>
+          {/* Exibe as datas abaixo do gráfico */}
+          <View style={styles.datesContainer}>
+                {getDatesByPeriod().map((date, index) => (
+                <Text key={index} style={styles.dateText}>
+                  {date}
+                </Text>
+                ))}
+          </View>
+          <Text style={styles.description}>
+              Os valores de saturação de oxigênio normais para idosos são de 95% a 100%. Em caso de doenças crônicas, os valores considerados normais são de 88% a 95%.
+          </Text>
+        </View>     
 
-      {/* Batimento Cardíaco */}
-      <View style={styles.chartContainer}>
-        <View style={styles.chartHeader}>
-        <Text style={styles.chartTitle}>Batimento Cardíaco (bpm)</Text>
-        </View>
-            <BarChart
-                style={styles.graph}
-                data={getDataByPeriod('heartRate')}
-                yAccessor={({ item }) => item.quantidade}
-                svg={{ fill: '#1e90ff' }}
-                contentInset={{ top: 30, bottom: 10 }}
-                spacingInner={0.2}
-                gridMin={0}
-                gridMax = {100}
+        {/*Adesão de Medicamentos */}
+        <View style={styles.chartContainer}>
+          <View style={styles.chartHeader}>
+            <Text style={styles.chartTitle}>Adesão de Medicamentos</Text>
+            <Switch
+              value={isPieChartMedication}
+              onValueChange={() => setIsPieChartMedication(!isPieChartMedication)}
+            />
+          </View>
+          {isPieChartMedication ? (
+            <PieChart
+              style={[styles.chart, { height: 240 }]}
+              data={getDataByPeriod('medication')}
+              valueAccessor={({ item }) => item.quantidade}
+              outerRadius="95%"
+              innerRadius="40%"
             >
-                {renderBarValues(getDataByPeriod('heartRate'), screenWidth)}
-                
+              <PieChartLabels />
+            </PieChart>
+          ) : (
+            <BarChart
+              style={styles.chart}
+              data={getDataByPeriod('medication')}
+              yAccessor={({ item }) => item.quantidade}
+              svg={{ fill: '#1e90ff' }}
+              contentInset={{ top: 30, bottom: 10 }}
+              spacingInner={0.2}
+              gridMin={0}
+              gridMax = {120}
+            >
+              {getDataByPeriod('medication').map((item, index) => (
+                <G key={index}>
+                  <SVGText
+                  key={index}
+                  x={index * 165 + 72}
+                  y={180 - item.quantidade - 20} // Ajusta posição acima da coluna
+                  fontSize={14}
+                  fontWeight="bold"
+                  fill="#333"
+                  alignmentBaseline="middle"
+                  textAnchor="middle"
+                  >
+                    {item.quantidade}
+                  </SVGText>
+                </G>
+              ))}
             </BarChart>
+          )}
 
-             {/* Exibe as datas abaixo do gráfico */}
-             <View style={styles.datesContainer}>
-                  {getDatesByPeriod().map((date, index) => (
-                  <Text key={index} style={styles.dateText}>
-                    {date}
-                  </Text>
-                  ))}
-                </View>
-
-            <Text style={styles.description}>
-                A frequência cardíaca normal para idosos em repouso varia entre 50bpm e 60bpm.
-            </Text>
-      </View>     
-
-      {/* Gráfico de SOS */}
-      <View style={styles.chartContainer}>
-        <View style={styles.chartHeader}>
-          <Text style={styles.chartTitle}>Ocorrências de SOS</Text>
-          <Switch
-            value={isPieChartSOS}
-            onValueChange={() => setIsPieChartSOS(!isPieChartSOS)}
-          />
+          {renderLegend(getDataByPeriod('medication'), 'medication')}
         </View>
-        {isPieChartSOS ? (
-          <PieChart
-            style={[styles.chart, { height: 240 }]}
-            data={getDataByPeriod('sos')}
-            valueAccessor={({ item }) => item.quantidade}
-            outerRadius="95%"
-            innerRadius="40%"
-          >
-            <PieChartLabels />
-          </PieChart>
-        ) : (
-          <BarChart
-            style={styles.chart}
-            data={getDataByPeriod('sos')}
-            yAccessor={({ item }) => item.quantidade}
-            svg={{ fill: '#1e90ff' }}
-            contentInset={{ top: 30, bottom: 10 }}
-            spacingInner={0.2}
-            gridMin={0}
-            gridMax = {16}
-          >
-            {renderBarValues(getDataByPeriod('sos'), screenWidth)}
-          </BarChart>
-        )}
 
-        {renderLegend(getDataByPeriod('sos'), 'sos')}
-        
-      </View>
-    </ScrollView>
+        {/* Batimento Cardíaco */}
+        <View style={styles.chartContainer}>
+          <View style={styles.chartHeader}>
+          <Text style={styles.chartTitle}>Batimento Cardíaco (bpm)</Text>
+          </View>
+              <BarChart
+                  style={styles.graph}
+                  data={getDataByPeriod('heartRate')}
+                  yAccessor={({ item }) => item.quantidade}
+                  svg={{ fill: '#1e90ff' }}
+                  contentInset={{ top: 30, bottom: 10 }}
+                  spacingInner={0.2}
+                  gridMin={0}
+                  gridMax = {100}
+              >
+                  {renderBarValues(getDataByPeriod('heartRate'), screenWidth)}
+                  
+              </BarChart>
+
+              {/* Exibe as datas abaixo do gráfico */}
+              <View style={styles.datesContainer}>
+                    {getDatesByPeriod().map((date, index) => (
+                    <Text key={index} style={styles.dateText}>
+                      {date}
+                    </Text>
+                    ))}
+                  </View>
+
+              <Text style={styles.description}>
+                  A frequência cardíaca normal para idosos em repouso varia entre 50bpm e 60bpm.
+              </Text>
+        </View>     
+
+        {/* Gráfico de SOS */}
+        <View style={styles.chartContainer}>
+          <View style={styles.chartHeader}>
+            <Text style={styles.chartTitle}>Ocorrências de SOS</Text>
+            <Switch
+              value={isPieChartSOS}
+              onValueChange={() => setIsPieChartSOS(!isPieChartSOS)}
+            />
+          </View>
+          {isPieChartSOS ? (
+            <PieChart
+              style={[styles.chart, { height: 240 }]}
+              data={getDataByPeriod('sos')}
+              valueAccessor={({ item }) => item.quantidade}
+              outerRadius="95%"
+              innerRadius="40%"
+            >
+              <PieChartLabels />
+            </PieChart>
+          ) : (
+            <BarChart
+              style={styles.chart}
+              data={getDataByPeriod('sos')}
+              yAccessor={({ item }) => item.quantidade}
+              svg={{ fill: '#1e90ff' }}
+              contentInset={{ top: 30, bottom: 10 }}
+              spacingInner={0.2}
+              gridMin={0}
+              gridMax = {16}
+            >
+              {renderBarValues(getDataByPeriod('sos'), screenWidth)}
+            </BarChart>
+          )}
+
+          {renderLegend(getDataByPeriod('sos'), 'sos')}
+          
+        </View>
+      </ScrollView>
+
+    </StyledContainer>
+
   );
 };
 
